@@ -1,0 +1,29 @@
+{
+    "mode": "global",
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "database": "auction",
+    "table": "users",
+    "mockStartIndex": "auto",
+    "mockCount": 30,
+    "examples": "http://mockjs.com/examples.html#DPD",
+    "mock": {
+        "Username": {
+            "type": "varchar",
+            "value": "@string('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!$' ,6, 15)"
+        },
+        "AuthPassWord": {
+            "type": "varchar",
+            "value": "@string('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!$' ,6, 20)"
+        },
+        "UserGroup": {
+            "type": "varchar",
+            "value": "@pick(['Buyer', 'Seller'])"
+        },
+        "Email": {
+            "type": "varchar",
+            "value": "@email"
+        }
+    }
+}

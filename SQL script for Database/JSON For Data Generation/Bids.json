@@ -1,0 +1,37 @@
+{
+    "mode": "global",
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "database": "auction",
+    "table": "bids",
+    "mockStartIndex": "auto",
+    "mockCount": 3000,
+    "examples": "http://mockjs.com/examples.html#DPD",
+    "mock": {
+        "BidID": {
+            "type": "int",
+            "value": "$mockIndex"
+        },
+        "UserName": {
+            "type": "varchar",
+            "value": "@pick(['aS8EIOIct6f8', 'CQPp92wgJmHcgES', 'HpSmyFQ', 'hxXcyJYg7', 'Iq2cszC', 'kfN!qRZ0CV1', 'qVqdF$YbTciget!', 'tqcxLwt5gVV', 'XBJhD4rIZ2KJP'])"
+        },
+        "AuctionID": {
+            "type": "int",
+            "value": "@integer(1,300)"
+        },
+        "BidPrice": {
+            "type": "float",
+            "value": "@float(0,99999,2,2)"
+        },
+        "BidTime": {
+            "type": "datetime",
+            "value": "@datetime()"
+        },
+        "Outcome": {
+            "type": "varchar",
+            "value": "@pick(['Success', 'Failed', 'Pending'])"
+        }
+    }
+}

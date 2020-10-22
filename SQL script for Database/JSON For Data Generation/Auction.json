@@ -1,0 +1,45 @@
+{
+    "mode": "global",
+    "host": "localhost",
+    "port": "3306",
+    "user": "root",
+    "database": "auction",
+    "table": "auctions",
+    "mockStartIndex": "auto",
+    "mockCount": 300,
+    "examples": "http://mockjs.com/examples.html#DPD",
+    "mock": {
+        "AuctionID": {
+            "type": "int",
+            "value": "$mockIndex"
+        },
+        "UserName": {
+            "type": "varchar",
+            "value": "@pick(['3ZZ28wmV8et', '55rxEEVX4hP0Yq7', '5uMMDQ6UAs5zrZ', '6AdIcYAmGFAKlAr', '9rPmHLU8jX5q$T', 'A1TqgPmvjhon', 'aS8EIOIct6f8', 'CQPp92wgJmHcgES', 'HpSmyFQ', 'hxXcyJYg7', 'Iq2cszC', 'kfN!qRZ0CV1', 'qVqdF$YbTciget!', 'tqcxLwt5gVV', 'XBJhD4rIZ2KJP'])"
+        },
+        "ItemName": {
+            "type": "tinytext",
+            "value": "@title(3,7)"
+        },
+        "ItemDescription": {
+            "type": "mediumtext",
+            "value": "@paragraph()"
+        },
+        "Category": {
+            "type": "varchar",
+            "value": "@pick(['Antiques', 'Art', 'Books', 'Cameras and Photo', 'Collectables', 'Computers Equipment', 'DIY Tools', 'Event Tickets', 'Garden Equipments', 'Health and Beauty', 'Musical Instruments', 'Office and Industrial Equipment', 'Powered Vehicles', 'Toys'])"
+        },
+        "StartingPrice": {
+            "type": "float",
+            "value": "@float(10,999,2,2)"
+        },
+        "ReservePrice": {
+            "type": "float",
+            "value": "@float(1000,99999,2,2)"
+        },
+        "EndingTime": {
+            "type": "datetime",
+            "value": "@datetime()"
+        }
+    }
+}
