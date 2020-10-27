@@ -1,3 +1,5 @@
+<?php include 'database.php'; ?>
+
 <?php
 
 // TODO: Extract $_POST variables, check they're OK, and attempt to login.
