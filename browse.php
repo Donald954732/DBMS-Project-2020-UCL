@@ -1,6 +1,8 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
 
+<?php include 'database.php'; ?>
+
 <div class="container">
 
 <h2 class="my-3">Browse listings</h2>
@@ -9,6 +11,7 @@
 <!-- When this form is submitted, this PHP page is what processes it.
      Search/sort specs are passed to this page through parameters in the URL
      (GET method of passing data to a page). -->
+
 <form method="get" action="browse.php">
   <div class="row">
     <div class="col-md-5 pr-0">
@@ -28,10 +31,17 @@
       <div class="form-group">
         <label for="cat" class="sr-only">Search within:</label>
         <select class="form-control" id="cat">
-          <option selected value="all">All categories</option>
-          <option value="fill">Fill me in</option>
-          <option value="with">with options</option>
-          <option value="populated">populated from a database?</option>
+        <option selected value="all">All</option>
+
+         <?php
+          $category_query = "SELECT c.Category FROM CategoryList c ORDER BY c.Category ASC";
+          $category_query_result = mysqli_query($connection, $category_query) or die("Error with category query". mysql_error());
+
+          while ($row = mysqli_fetch_array($category_query_result)){
+                echo "<option>". $row{'Category'}."</option>";
+          }
+          ?>
+
         </select>
       </div>
     </div>
@@ -59,6 +69,7 @@
   // Retrieve these from the URL
   if (!isset($_GET['keyword'])) {
     // TODO: Define behavior if a keyword has not been specified.
+    $keyword = "";
   }
   else {
     $keyword = $_GET['keyword'];
@@ -70,14 +81,14 @@
   else {
     $category = $_GET['cat'];
   }
-  
+
   if (!isset($_GET['order_by'])) {
     // TODO: Define behavior if an order_by value has not been specified.
   }
   else {
     $ordering = $_GET['order_by'];
   }
-  
+
   if (!isset($_GET['page'])) {
     $curr_page = 1;
   }
@@ -85,10 +96,10 @@
     $curr_page = $_GET['page'];
   }
 
-  /* TODO: Use above values to construct a query. Use this query to 
+  /* TODO: Use above values to construct a query. Use this query to
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
-  
+
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
   $num_results = 96; // TODO: Calculate me for real
@@ -113,17 +124,17 @@
   $current_price = 30;
   $num_bids = 1;
   $end_date = new DateTime('2020-09-16T11:00:00');
-  
+
   // This uses a function defined in utilities.php
   print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
-  
+
   $item_id = "516";
   $title = "Different title";
   $description = "Very short description.";
   $current_price = 13.50;
   $num_bids = 3;
   $end_date = new DateTime('2020-11-02T00:00:00');
-  
+
   print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
 ?>
 
@@ -132,7 +143,7 @@
 <!-- Pagination for results listings -->
 <nav aria-label="Search results pages" class="mt-5">
   <ul class="pagination justify-content-center">
-  
+
 <?php
 
   // Copy any currently-set GET variables to the URL.
@@ -142,12 +153,12 @@
       $querystring .= "$key=$value&amp;";
     }
   }
-  
+
   $high_page_boost = max(3 - $curr_page, 0);
   $low_page_boost = max(2 - ($max_page - $curr_page), 0);
   $low_page = max(1, $curr_page - 2 - $low_page_boost);
   $high_page = min($max_page, $curr_page + 2 + $high_page_boost);
-  
+
   if ($curr_page != 1) {
     echo('
     <li class="page-item">
@@ -157,7 +168,7 @@
       </a>
     </li>');
   }
-    
+
   for ($i = $low_page; $i <= $high_page; $i++) {
     if ($i == $curr_page) {
       // Highlight the link
@@ -169,13 +180,13 @@
       echo('
     <li class="page-item">');
     }
-    
+
     // Do this in any case
     echo('
       <a class="page-link" href="browse.php?' . $querystring . 'page=' . $i . '">' . $i . '</a>
     </li>');
   }
-  
+
   if ($curr_page != $max_page) {
     echo('
     <li class="page-item">
