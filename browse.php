@@ -125,8 +125,11 @@ if ($connectionView->connect_error) {
   "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
   "WHERE a.ItemName LIKE '%".$keyword."%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0 AND a.Category = ".$category." ".
   "GROUP BY a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime ".$ordering;
+
   $limiter = " LIMIT ".strval(($curr_page-1)*$results_per_page).", ".strval($results_per_page);
+  
   $querryWithLimitItemPerPage = $querryItemList.$limiter;
+  //echo $querryWithLimitItemPerPage;
   //echo $querryItemList;
   /*$querryTotalItem = "SELECT Count('RowNum') AS 'total' FROM (".$querryItemList.")";
   $resultSearch = mysqli_query($connectionView, $querryItemList);
@@ -182,7 +185,7 @@ if ($connectionView->connect_error) {
 
   //echo($max_page);
   //echo($num_results);
-  mysqli_close($connectionView);
+  //mysqli_close($connectionView); //Don't close it here
 ?>
 
 <div class="container mt-5">
@@ -196,11 +199,8 @@ if ($connectionView->connect_error) {
 
 <?php
   // Demonstration of what listings will look like using dummy data.
-
   $search_query_result = mysqli_query($connectionView, $querryWithLimitItemPerPage);
   while ($row = mysqli_fetch_array($search_query_result)){
-    // Need to show: $item_id, $title, $description, $current_price, $num_bids, $end_date
-  
   $item_id = $row['AuctionID'];
   $title = $row['ItemName'];
   $description = $row['ItemDescription'];
