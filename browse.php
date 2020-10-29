@@ -131,19 +131,15 @@ echo "Connected successfully";
 
      if (empty($keyword) and $category != "all"){
          // text field empty and category != all
-         echo("text field empty and category != all");
          $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE Category = '$category' ORDER BY StartingPrice $ordering";
      } elseif (!empty($keyword) and $category == "all"){
          // text field not empty and category = all
-         echo ("text field not empty and category = all");
          $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE INSTR(ItemDescription, '$keyword') > 0 ORDER BY StartingPrice $ordering";
      } elseif (!empty($keyword) and $category != "all"){
          // text field not empty and category != all
-         echo ("text field not empty and category != all");
          $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE INSTR(ItemDescription, '$keyword') > 0 AND Category = '$category' ORDER BY StartingPrice $ordering";
      }else{
          //text field empty and category = all
-         echo ("text field empty and category = all");
          $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions ORDER BY StartingPrice $ordering";
      }
 
