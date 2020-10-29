@@ -1,5 +1,7 @@
 <?php include_once("header.php")?>
 
+<?php include 'database.php'; ?>
+
 <div class="container">
 <h2 class="my-3">Register new account</h2>
 
