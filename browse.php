@@ -1,7 +1,22 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
 
-<?php include 'database.php'; ?>
+<?php
+//use different account for different purpose so that they can't do SQL injection attack
+$servername = "localhost";
+$username = "AuctionUserView";
+$password = "PasswordAuctionViewDBMS2020";
+$table = "Auction";
+
+// Create connection
+$connectionView = new mysqli($servername, $username, $password, $table);
+
+// Check connection
+if ($connectionView->connect_error) {
+  die("Connection failed: " . $connectionView->connect_error);
+}
+echo "Connected successfully";
+?>
 
 <div class="container">
 
@@ -34,7 +49,7 @@
           <option selected value="all">All categories</option>
           <?php
           // the code to populate the category list -- Donald
-          $querryCategoryList = "SELECT Category FROM auction.categorylist ORDER BY c.Category ASC";
+          $querryCategoryList = "SELECT Category FROM auction.categorylist ORDER BY Category ASC";
           $resultCatrgory = mysqli_query($connectionView, $querryCategoryList);
           while ($rowCategory = mysqli_fetch_array($resultCatrgory))
           {
@@ -100,10 +115,7 @@
   /* TODO: Use above values to construct a query. Use this query to
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
-<<<<<<< HEAD
-=======
 
->>>>>>> 8a2f64dc733f5807f3ad930a6129cfb0930cc96c
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
    // TODO: Calculate me for real
