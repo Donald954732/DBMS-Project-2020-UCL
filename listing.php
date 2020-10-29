@@ -6,7 +6,7 @@
   // Get info from the URL:
   $item_id = $_GET['item_id'];
 
-  // TODO: Use item_id to make a query to the database. -- Done
+  // TODO: Use item_id to make a query to the database. -- Done, Donald
   $querryCurrentItem = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
   "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'bidPrice', IF(MAX(bidPrice) IS NULL, a.StartingPrice, MAX(bidPrice))  AS 'CurrentPrice', a.StartingPrice ".
   "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
