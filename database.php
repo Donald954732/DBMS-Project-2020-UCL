@@ -12,5 +12,5 @@ $connectionView = new mysqli($servername, $username, $password, $table);
 if ($connectionView->connect_error) {
   die("Connection failed: " . $connectionView->connect_error);
 }
-echo "Connected successfully";
+//echo "Connected successfully";
 ?>

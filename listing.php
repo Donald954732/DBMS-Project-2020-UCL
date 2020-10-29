@@ -1,18 +1,26 @@
 <?php include_once("header.php")?>
+<?php include 'database.php'; ?>
 <?php require("utilities.php")?>
 
 <?php
   // Get info from the URL:
   $item_id = $_GET['item_id'];
 
-  // TODO: Use item_id to make a query to the database.
-
+  // TODO: Use item_id to make a query to the database. -- Done
+  $querryCurrentItem = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
+  "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'bidPrice', IF(MAX(bidPrice) IS NULL, a.StartingPrice, MAX(bidPrice))  AS 'CurrentPrice', a.StartingPrice ".
+  "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
+  "WHERE a.AuctionID = ".$item_id." ".
+  "GROUP BY a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime";
   // DELETEME: For now, using placeholder data.
-  $title = "Placeholder title";
-  $description = "Description blah blah blah";
-  $current_price = 30.50;
-  $num_bids = 1;
-  $end_time = new DateTime('2020-11-02T00:00:00');
+  //echo $querryCurrentItem;
+  $ItemResult = mysqli_query($connectionView, $querryCurrentItem);
+  $ItemInfo = mysqli_fetch_array($ItemResult);
+  $title = $ItemInfo['ItemName'];
+  $description = $ItemInfo['ItemDescription'];
+  $current_price = $ItemInfo['CurrentPrice'];
+  $num_bids = $ItemInfo['CountBids'];
+  $end_time = new DateTime($ItemInfo['EndingTime']);
 
   // TODO: Note: Auctions that have ended may pull a different set of data,
   //       like whether the auction ended in a sale or was cancelled due

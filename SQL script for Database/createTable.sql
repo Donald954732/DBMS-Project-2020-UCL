@@ -51,7 +51,7 @@ INSERT INTO CategoryList VALUES('Musical Instruments');
 DROP TABLE IF EXISTS Users;
 CREATE TABLE Users (
     Username VARCHAR(50),
-    AuthPassWord VARCHAR(50) NOT NULL,
+    AuthPassWord VARCHAR(40) NOT NULL,
     UserGroup VARCHAR(6),
     Email VARCHAR(100) NOT NULL,
     PRIMARY KEY (Username),
