@@ -23,22 +23,25 @@
               <i class="fa fa-search"></i>
             </span>
           </div>
-          <input type="text" class="form-control border-left-0" id="keyword" placeholder="Search for anything">
+          <input type="text" class="form-control border-left-0" id="keyword" placeholder="Search for anything" name="keyword">
+          <?php
+
+          ?>
         </div>
       </div>
     </div>
     <div class="col-md-3 pr-0">
       <div class="form-group">
         <label for="cat" class="sr-only">Search within:</label>
-        <select class="form-control" id="cat">
-        <option selected value="all">All</option>
+        <select class="form-control" id="cat" name="cat">
+        <option selected value="All">All</option>
 
          <?php
           $category_query = "SELECT c.Category FROM CategoryList c ORDER BY c.Category ASC";
           $category_query_result = mysqli_query($connection, $category_query) or die("Error with category query". mysql_error());
 
           while ($row = mysqli_fetch_array($category_query_result)){
-                echo "<option>". $row{'Category'}."</option>";
+                echo "<option>". $row['Category']."</option>";
           }
           ?>
 
@@ -48,7 +51,7 @@
     <div class="col-md-3 pr-0">
       <div class="form-inline">
         <label class="mx-2" for="order_by">Sort by:</label>
-        <select class="form-control" id="order_by">
+        <select class="form-control" id="order_by" name="order_by">
           <option selected value="pricelow">Price (low to high)</option>
           <option value="pricehigh">Price (high to low)</option>
           <option value="date">Soonest expiry</option>
@@ -69,6 +72,7 @@
   // Retrieve these from the URL
   if (!isset($_GET['keyword'])) {
     // TODO: Define behavior if a keyword has not been specified.
+    // Show all bids if no keyword is entered
     $keyword = "";
   }
   else {
@@ -77,6 +81,8 @@
 
   if (!isset($_GET['cat'])) {
     // TODO: Define behavior if a category has not been specified.
+    // Show all categpries if no keyword is entered
+    $category = "All";
   }
   else {
     $category = $_GET['cat'];
@@ -84,9 +90,19 @@
 
   if (!isset($_GET['order_by'])) {
     // TODO: Define behavior if an order_by value has not been specified.
+    $ordering = "ASC";
   }
   else {
-    $ordering = $_GET['order_by'];
+      if ($_GET['order_by'] == "pricelow"){
+          $ordering = "ASC";
+      }
+      elseif ($_GET['order_by'] == "pricehigh"){
+          $ordering = "DESC";
+      }
+      else{
+          // Show all bids in order of closest date
+          $ordering = "";
+      }
   }
 
   if (!isset($_GET['page'])) {
@@ -100,11 +116,33 @@
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
 
+     if ($category == "All" && $keyword == ""){
+         //$search_query = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime FROM Auctions a WHERE a.Category='$category' AND a.ItemDescription LIKE '%$keyword%' ORDER BY a.StartingPrice $ordering";
+         echo("inside if");
+         $search_query = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime FROM Auctions a ORDER BY a.StartingPrice $ordering";
+     } else {
+         echo ("Inside Else");
+         $search_query = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime FROM Auctions a WHERE a.Category = '$category' AND INSTR(a.ItemDescription, '$keyword') > 0 ORDER BY a.StartingPrice $ordering";
+     }
+
+     $search_query_result = mysqli_query($connection, $search_query) or die("Error with search query". mysql_error());
+
+     // Temporarily listing items here
+     while ($row = mysqli_fetch_array($search_query_result)){
+           // Need to show: $item_id, $title, $description, $current_price, $num_bids, $end_date
+           print_listing_li($row['AuctionID'], $row['ItemName'], $row['ItemDescription'], $row['StartingPrice'], 1, $row['EndingTime']);
+     }
+
+
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
-  $num_results = 96; // TODO: Calculate me for real
+  $num_results = mysqli_num_rows($search_query_result); // TODO: Calculate me for real
   $results_per_page = 10;
   $max_page = ceil($num_results / $results_per_page);
+
+  //echo($max_page);
+  //echo($num_results);
+  mysqli_close($connection);
 ?>
 
 <div class="container mt-5">
