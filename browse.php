@@ -160,7 +160,7 @@ echo "Connected successfully";
 
   //echo($max_page);
   //echo($num_results);
-  //mysqli_close($connectionView);
+  mysqli_close($connectionView);
 ?>
 
 <div class="container mt-5">
