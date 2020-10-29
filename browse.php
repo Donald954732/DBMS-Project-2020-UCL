@@ -15,7 +15,7 @@ $connectionView = new mysqli($servername, $username, $password, $table);
 if ($connectionView->connect_error) {
   die("Connection failed: " . $connectionView->connect_error);
 }
-echo "Connected successfully";
+//echo "Connected successfully";
 ?>
 
 <div class="container">
@@ -38,24 +38,24 @@ echo "Connected successfully";
               <i class="fa fa-search"></i>
             </span>
           </div>
-          <input type="text" class="form-control border-left-0" id="keyword" placeholder="Search for anything">
+          <input type="text" class="form-control border-left-0" id="keyword" placeholder="Search for anything" name="keyword">
         </div>
       </div>
     </div>
     <div class="col-md-3 pr-0">
       <div class="form-group">
         <label for="cat" class="sr-only">Search within:</label>
-        <select class="form-control" id="cat">
-          <option selected value="all">All categories</option>
+        <select class="form-control" id="cat" name="cat">
+          <option selected value="a.Category">All categories</option>
           <?php
           // the code to populate the category list -- Donald
           $querryCategoryList = "SELECT Category FROM auction.categorylist ORDER BY Category ASC";
           $resultCatrgory = mysqli_query($connectionView, $querryCategoryList);
           while ($rowCategory = mysqli_fetch_array($resultCatrgory))
           {
-            echo '<option value='.$rowCategory['Category'].'>'.$rowCategory['Category'].'</option>';
+            echo "<option value='".$rowCategory['Category']."'>".$rowCategory['Category']."</option>";
           }
-          mysqli_close($connectionView)
+          //mysqli_close($connectionView)
           ?>
         </select>
       </div>
@@ -63,10 +63,10 @@ echo "Connected successfully";
     <div class="col-md-3 pr-0">
       <div class="form-inline">
         <label class="mx-2" for="order_by">Sort by:</label>
-        <select class="form-control" id="order_by">
-          <option selected value="MAX(b.BidPrice) ASC">Price (low to high)</option>
-          <option value="MAX(b.BidPrice) DESC">Price (high to low)</option>
-          <option value="(a.EndingTime - CURRENT_TIMESTAMP) ASC">Soonest expiry</option>
+        <select class="form-control" id="order_by" name="order_by">
+          <option selected value="ORDER BY CurrentPrice ASC">Price (low to high)</option>
+          <option value="ORDER BY CurrentPrice DESC">Price (high to low)</option>
+          <option value="ORDER BY (a.EndingTime - CURRENT_TIMESTAMP) ASC">Soonest expiry</option>
         </select>
       </div>
     </div>
@@ -90,16 +90,17 @@ echo "Connected successfully";
     $keyword = $_GET['keyword'];
   }
 
-  if (!isset($_GET['cat'])) {
+  if (!isset($_GET['cat']) or $_GET['cat'] == "a.Category") {
     // TODO: Define behavior if a category has not been specified.
-    $category = "%";
+    $category = "a.Category";
   }
   else {
-    $category = $_GET['cat'];
+    $category = "'".$_GET['cat']."'";
   }
 
   if (!isset($_GET['order_by'])) {
     // TODO: Define behavior if an order_by value has not been specified.
+    $ordering = "";
   }
   else {
     $ordering = $_GET['order_by'];
@@ -112,28 +113,76 @@ echo "Connected successfully";
     $curr_page = $_GET['page'];
   }
 
+  //echo $ordering;
+
   /* TODO: Use above values to construct a query. Use this query to
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
    
-  $querryItemList = "SELECT ROW_NUMBER() OVER(".$ordering.") AS 'RowNum', a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
-  "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'CurrentPrice', a.StartingPrice".
-  "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID".
-  "WHERE a.ItemName LIKE '%".$keyword."%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0".
-  "GROUP BY a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime".
-  "ORDER BY RowNum ASC";
-  $querryTotalItem = "SELECT Count('RowNum') AS 'total' FROM (".$querryItemList.")";
-  $resultSearch = mysqli_query($connectionView, $querryTotalItem);
-  $totalItem = mysqli_fetch_array($resultCatrgory)
+  $results_per_page = 10;
+  $querryItemList = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
+  "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'bidPrice', IF(MAX(bidPrice) IS NULL, a.StartingPrice, MAX(bidPrice))  AS 'CurrentPrice', a.StartingPrice ".
+  "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
+  "WHERE a.ItemName LIKE '%".$keyword."%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0 AND a.Category = ".$category." ".
+  "GROUP BY a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime ".$ordering;
+  $limiter = " LIMIT ".strval(($curr_page-1)*$results_per_page).", ".strval($results_per_page);
+  $querryWithLimitItemPerPage = $querryItemList.$limiter;
+  //echo $querryItemList;
+  /*$querryTotalItem = "SELECT Count('RowNum') AS 'total' FROM (".$querryItemList.")";
+  $resultSearch = mysqli_query($connectionView, $querryItemList);
   
+  $totalItem = mysqli_fetch_array($resultCatrgory);
+  */
+     /*//echo($keyword);
+     //echo($category);
+
+     if (empty($keyword) and $category != "all"){
+         // text field empty and category != all
+         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE Category = '$category' ORDER BY StartingPrice $ordering";
+     } elseif (!empty($keyword) and $category == "all"){
+         // text field not empty and category = all
+         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE INSTR(ItemDescription, '$keyword') > 0 ORDER BY StartingPrice $ordering";
+     } elseif (!empty($keyword) and $category != "all"){
+         // text field not empty and category != all
+         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE INSTR(ItemDescription, '$keyword') > 0 AND Category = '$category' ORDER BY StartingPrice $ordering";
+     }else{
+         //text field empty and category = all
+         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions ORDER BY StartingPrice $ordering";
+     }
+
+     $search_query_result = mysqli_query($connectionView, $search_query) or die("Error with search query". mysql_error());
+
+     // Temporarily listing items here
+     while ($row = mysqli_fetch_array($search_query_result)){
+           // Need to show: $item_id, $title, $description, $current_price, $num_bids, $end_date
+           print_listing_li($row['AuctionID'], $row['ItemName'], $row['ItemDescription'], $row['StartingPrice'], 1, $row['EndingTime']);
+     }*/
+
 
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
+  //$resultCatrgory = mysqli_query($connectionView, $querryCategoryList);
   
-  // TODO: Calculate me for real
-  $num_results = $totalItem['total'];
-  $results_per_page = 10;
+  $resultforCounting = mysqli_query($connectionView, $querryItemList);
+  if ($resultforCounting) 
+    { 
+        // it return number of rows in the table. 
+        $num_results = mysqli_num_rows($resultforCounting); 
+          
+           if ($num_results) 
+              { 
+                 //printf("Number of row in the table : " . $num_results); 
+              }
+    } 
+  
+  //$num_results = mysqli_num_rows($resultforCounting); // TODO: Calculate me for real
+  
+  //echo $num_results;
   $max_page = ceil($num_results / $results_per_page);
+
+  //echo($max_page);
+  //echo($num_results);
+  //mysqli_close($connectionView);
 ?>
 
 <div class="container mt-5">
@@ -147,24 +196,20 @@ echo "Connected successfully";
 
 <?php
   // Demonstration of what listings will look like using dummy data.
-  $item_id = "87021";
-  $title = "Dummy title";
-  $description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget rutrum ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus feugiat, ipsum vel egestas elementum, sem mi vestibulum eros, et facilisis dui nisi eget metus. In non elit felis. Ut lacus sem, pulvinar ultricies pretium sed, viverra ac sapien. Vivamus condimentum aliquam rutrum. Phasellus iaculis faucibus pellentesque. Sed sem urna, maximus vitae cursus id, malesuada nec lectus. Vestibulum scelerisque vulputate elit ut laoreet. Praesent vitae orci sed metus varius posuere sagittis non mi.";
-  $current_price = 30;
-  $num_bids = 1;
-  $end_date = new DateTime('2020-09-16T11:00:00');
 
+  $search_query_result = mysqli_query($connectionView, $querryWithLimitItemPerPage);
+  while ($row = mysqli_fetch_array($search_query_result)){
+    // Need to show: $item_id, $title, $description, $current_price, $num_bids, $end_date
+  
+  $item_id = $row['AuctionID'];
+  $title = $row['ItemName'];
+  $description = $row['ItemDescription'];
+  $current_price = $row['CurrentPrice'];
+  $num_bids = $row['CountBids'];
+  $end_date = new DateTime($row['EndingTime']);
   // This uses a function defined in utilities.php
   print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
-
-  $item_id = "516";
-  $title = "Different title";
-  $description = "Very short description.";
-  $current_price = 13.50;
-  $num_bids = 3;
-  $end_date = new DateTime('2020-11-02T00:00:00');
-
-  print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+  }
 ?>
 
 </ul>
