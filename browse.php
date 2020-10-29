@@ -64,9 +64,9 @@ echo "Connected successfully";
       <div class="form-inline">
         <label class="mx-2" for="order_by">Sort by:</label>
         <select class="form-control" id="order_by">
-          <option selected value="pricelow">Price (low to high)</option>
-          <option value="pricehigh">Price (high to low)</option>
-          <option value="date">Soonest expiry</option>
+          <option selected value="MAX(b.BidPrice) ASC">Price (low to high)</option>
+          <option value="MAX(b.BidPrice) DESC">Price (high to low)</option>
+          <option value="(a.EndingTime - CURRENT_TIMESTAMP) ASC">Soonest expiry</option>
         </select>
       </div>
     </div>
@@ -115,11 +115,23 @@ echo "Connected successfully";
   /* TODO: Use above values to construct a query. Use this query to
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
+   
+  $querryItemList = "SELECT ROW_NUMBER() OVER(".$ordering.") AS 'RowNum', a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
+  "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'CurrentPrice', a.StartingPrice".
+  "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID".
+  "WHERE a.ItemName LIKE '%".$keyword."%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0".
+  "GROUP BY a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime".
+  "ORDER BY RowNum ASC";
+  $querryTotalItem = "SELECT Count('RowNum') AS 'total' FROM (".$querryItemList.")";
+  $resultSearch = mysqli_query($connectionView, $querryTotalItem);
+  $totalItem = mysqli_fetch_array($resultCatrgory)
+  
 
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
-   // TODO: Calculate me for real
-  $num_results = 96;
+  
+  // TODO: Calculate me for real
+  $num_results = $totalItem['total'];
   $results_per_page = 10;
   $max_page = ceil($num_results / $results_per_page);
 ?>

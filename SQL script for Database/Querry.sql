@@ -23,34 +23,30 @@ VALUES ($UserName, $AuctionID, $BidPrice, $BidTime, 'Pending');
     #3 Searching
 */
 
----searching with text and sorted soonest expire
-SELECT a.ItemName, a.ItemDescription, a.StartingPrice, 
-TIMEDIFF(a.EndingTime, CURRENT_TIMESTAMP()) AS 'Time Remaining', COUNT(b.BidID) AS 'No. Of Bids', 
-MAX(b.BidPrice) AS 'Current Price', a.StartingPrice
-FROM auctions a JOIN bids b ON a.AuctionID = b.AuctionID
----search by itemname and remove expired
-WHERE a.ItemName LIKE '%i%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0
+---searching with text and sorted soonest expire ---search by itemname and remove expired
+SELECT a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, COUNT(b.BidID) AS 'CountBids', 
+MAX(b.BidPrice) AS 'CurrentPrice', a.StartingPrice
+FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID
+WHERE a.ItemName LIKE '%NoBids%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0
 GROUP BY a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime
 ORDER BY (a.EndingTime - CURRENT_TIMESTAMP) ASC;
 
 
 --- swap it out with different category
-SELECT a.ItemName, a.ItemDescription, a.StartingPrice, 
-TIMEDIFF(a.EndingTime, CURRENT_TIMESTAMP()) AS 'Time Remaining', COUNT(b.BidID) AS 'No. Of Bids',
-MAX(b.BidPrice) AS 'Current Price', a.StartingPrice
-FROM auctions a JOIN bids b ON a.AuctionID = b.AuctionID
+SELECT ROW_NUMBER() OVER(ORDER BY (a.EndingTime - CURRENT_TIMESTAMP) ASC) AS 'RowNum', a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, COUNT(b.BidID) AS 'CountBids', 
+MAX(b.BidPrice) AS 'CurrentPrice', a.StartingPrice
+FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID
 ---searching by categories
 WHERE a.ItemName LIKE '%i%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0 
 AND a.Category = 'Antiques' 
 GROUP BY a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime
-ORDER BY (a.EndingTime - CURRENT_TIMESTAMP) ASC;
+ORDER BY RowNum ASC;
 
 --- sorted BY price
 ---searching with text and sorted soonest expire
-SELECT a.ItemName, a.ItemDescription, a.StartingPrice, 
-TIMEDIFF(a.EndingTime, CURRENT_TIMESTAMP()) AS 'Time Remaining', COUNT(b.BidID) AS 'No. Of Bids', 
-MAX(b.BidPrice) AS 'Current Price', a.StartingPrice
-FROM auctions a JOIN bids b ON a.AuctionID = b.AuctionID
+SELECT a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, COUNT(b.BidID) AS 'CountBids', 
+MAX(b.BidPrice) AS 'CurrentPrice', a.StartingPrice
+FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID
 ---search by itemname and remove expired
 WHERE a.ItemName LIKE '%i%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0
 GROUP BY a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime
