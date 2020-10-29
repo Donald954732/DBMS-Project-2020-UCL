@@ -1,6 +1,22 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
 
+<?php
+$servername = "localhost";
+$username = "AuctionUserView";
+$password = "PasswordAuctionViewDBMS2020";
+$table = "Auction";
+
+// Create connection
+$connectionView = new mysqli($servername, $username, $password, $table);
+
+// Check connection
+if ($connectionView->connect_error) {
+  die("Connection failed: " . $connectionView->connect_error);
+}
+echo "Connected successfully";
+?>
+
 <div class="container">
 
 <h2 class="my-3">Browse listings</h2>
@@ -29,9 +45,16 @@
         <label for="cat" class="sr-only">Search within:</label>
         <select class="form-control" id="cat">
           <option selected value="all">All categories</option>
-          <option value="fill">Fill me in</option>
-          <option value="with">with options</option>
-          <option value="populated">populated from a database?</option>
+          <?php
+          // the code to populate the category list -- Donald
+          $querryCategoryList = "SELECT Category FROM auction.categorylist";
+          $resultCatrgory = mysqli_query($connectionView, $querryCategoryList);
+          while ($rowCategory = mysqli_fetch_array($resultCatrgory))
+          {
+            echo '<option value='.$rowCategory['Category'].'>'.$rowCategory['Category'].'</option>';
+          }
+          mysqli_close($connectionView)
+          ?>
         </select>
       </div>
     </div>
@@ -59,6 +82,7 @@
   // Retrieve these from the URL
   if (!isset($_GET['keyword'])) {
     // TODO: Define behavior if a keyword has not been specified.
+    $keyword = "%";
   }
   else {
     $keyword = $_GET['keyword'];
@@ -66,6 +90,7 @@
 
   if (!isset($_GET['cat'])) {
     // TODO: Define behavior if a category has not been specified.
+    $category = "%";
   }
   else {
     $category = $_GET['cat'];
@@ -88,10 +113,10 @@
   /* TODO: Use above values to construct a query. Use this query to 
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
-  
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
-  $num_results = 96; // TODO: Calculate me for real
+   // TODO: Calculate me for real
+  $num_results = 96;
   $results_per_page = 10;
   $max_page = ceil($num_results / $results_per_page);
 ?>
