@@ -1,7 +1,22 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
 
-<?php include 'database.php'; ?>
+<?php
+//use different account for different purpose so that they can't do SQL injection attack
+$servername = "localhost";
+$username = "AuctionUserView";
+$password = "PasswordAuctionViewDBMS2020";
+$table = "Auction";
+
+// Create connection
+$connectionView = new mysqli($servername, $username, $password, $table);
+
+// Check connection
+if ($connectionView->connect_error) {
+  die("Connection failed: " . $connectionView->connect_error);
+}
+echo "Connected successfully";
+?>
 
 <div class="container">
 
@@ -24,9 +39,6 @@
             </span>
           </div>
           <input type="text" class="form-control border-left-0" id="keyword" placeholder="Search for anything" name="keyword">
-          <?php
-
-          ?>
         </div>
       </div>
     </div>
@@ -34,17 +46,17 @@
       <div class="form-group">
         <label for="cat" class="sr-only">Search within:</label>
         <select class="form-control" id="cat" name="cat">
-        <option selected value="All">All</option>
-
-         <?php
-          $category_query = "SELECT c.Category FROM CategoryList c ORDER BY c.Category ASC";
-          $category_query_result = mysqli_query($connection, $category_query) or die("Error with category query". mysql_error());
-
-          while ($row = mysqli_fetch_array($category_query_result)){
-                echo "<option>". $row['Category']."</option>";
+          <option selected value="all">All categories</option>
+          <?php
+          // the code to populate the category list -- Donald
+          $querryCategoryList = "SELECT Category FROM auction.categorylist ORDER BY Category ASC";
+          $resultCatrgory = mysqli_query($connectionView, $querryCategoryList);
+          while ($rowCategory = mysqli_fetch_array($resultCatrgory))
+          {
+            echo '<option value='.$rowCategory['Category'].'>'.$rowCategory['Category'].'</option>';
           }
+          //mysqli_close($connectionView)
           ?>
-
         </select>
       </div>
     </div>
@@ -72,8 +84,7 @@
   // Retrieve these from the URL
   if (!isset($_GET['keyword'])) {
     // TODO: Define behavior if a keyword has not been specified.
-    // Show all bids if no keyword is entered
-    $keyword = "";
+    $keyword = "%";
   }
   else {
     $keyword = $_GET['keyword'];
@@ -81,8 +92,7 @@
 
   if (!isset($_GET['cat'])) {
     // TODO: Define behavior if a category has not been specified.
-    // Show all categpries if no keyword is entered
-    $category = "All";
+    $category = "%";
   }
   else {
     $category = $_GET['cat'];
@@ -116,16 +126,28 @@
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
 
-     if ($category == "All" && $keyword == ""){
-         //$search_query = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime FROM Auctions a WHERE a.Category='$category' AND a.ItemDescription LIKE '%$keyword%' ORDER BY a.StartingPrice $ordering";
-         echo("inside if");
-         $search_query = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime FROM Auctions a ORDER BY a.StartingPrice $ordering";
-     } else {
-         echo ("Inside Else");
-         $search_query = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime FROM Auctions a WHERE a.Category = '$category' AND INSTR(a.ItemDescription, '$keyword') > 0 ORDER BY a.StartingPrice $ordering";
+     //echo($keyword);
+     //echo($category);
+
+     if (empty($keyword) and $category != "all"){
+         // text field empty and category != all
+         echo("text field empty and category != all");
+         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE Category = '$category' ORDER BY StartingPrice $ordering";
+     } elseif (!empty($keyword) and $category == "all"){
+         // text field not empty and category = all
+         echo ("text field not empty and category = all");
+         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE INSTR(ItemDescription, '$keyword') > 0 ORDER BY StartingPrice $ordering";
+     } elseif (!empty($keyword) and $category != "all"){
+         // text field not empty and category != all
+         echo ("text field not empty and category != all");
+         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE INSTR(ItemDescription, '$keyword') > 0 AND Category = '$category' ORDER BY StartingPrice $ordering";
+     }else{
+         //text field empty and category = all
+         echo ("text field empty and category = all");
+         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions ORDER BY StartingPrice $ordering";
      }
 
-     $search_query_result = mysqli_query($connection, $search_query) or die("Error with search query". mysql_error());
+     $search_query_result = mysqli_query($connectionView, $search_query) or die("Error with search query". mysql_error());
 
      // Temporarily listing items here
      while ($row = mysqli_fetch_array($search_query_result)){
@@ -142,7 +164,7 @@
 
   //echo($max_page);
   //echo($num_results);
-  mysqli_close($connection);
+  //mysqli_close($connectionView);
 ?>
 
 <div class="container mt-5">

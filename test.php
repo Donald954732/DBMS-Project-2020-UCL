@@ -1,5 +1,4 @@
 <?php
-//use different account for different purpose so that they can't do SQL injection attack
 $servername = "localhost";
 $username = "AuctionUserView";
 $password = "PasswordAuctionViewDBMS2020";

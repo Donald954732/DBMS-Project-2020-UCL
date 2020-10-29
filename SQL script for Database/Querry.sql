@@ -1,3 +1,7 @@
+--retrieve list of categories
+SELECT Category
+FROM auction.categorylist;
+
 /*
     #1 Create User
 */

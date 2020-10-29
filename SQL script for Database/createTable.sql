@@ -8,14 +8,6 @@ CREATE DATABASE Auction;
 
 USE Auction;
 
-/*
-    Create User and grant permission for use in PHP
-*/
-
-DROP USER IF EXISTS 'AuctionUser'@'%';
-
-CREATE USER 'AuctionUser'@'%' IDENTIFIED BY 'PasswordAuctionDBMS2020';
-GRANT ALL PRIVILEGES ON Auction.* TO 'AuctionUser'@'%';
 
 -- The table must be created in the correct order
 /*
@@ -66,76 +58,77 @@ CREATE TABLE Users (
     CONSTRAINT FK_UserGroup FOREIGN KEY (UserGroup) REFERENCES auction.UserStatus(UserGroup) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
-INSERT INTO users VALUES ('somberWidgeon2', 'AMTpkzbSiyVhdKqhsd', 'Seller', 'mooredavid@stephens.com');
-INSERT INTO users VALUES ('sheepishMallard0', 'BoPc62KUUq!1', 'Buyer', 'velasquezethan@yahoo.com');
-INSERT INTO users VALUES ('anxiousLapwing2', 'LKuFF7!taQO2fTi5Ix', 'Seller', 'gsalas@velazquez.com');
-INSERT INTO users VALUES ('wakefulOil2', 'UMh7I2nRN4mce', 'Buyer', 'williamsbenjamin@hotmail.com');
-INSERT INTO users VALUES ('lazyBittern2', '9g818CJArRuFr3JE', 'Seller', 'stevenwebb@gmail.com');
-INSERT INTO users VALUES ('eagerBuck6', 'oMCQfFb!zKNHK', 'Seller', 'howellpatrick@gmail.com');
-INSERT INTO users VALUES ('holisticOatmeal2', 'E7mlrvvFmGyH7mHnIKc', 'Buyer', 'zgallagher@ramirez-norman.com');
-INSERT INTO users VALUES ('zestySardines3', 'FzBHL6UcrLe28', 'Buyer', 'grahamdavid@martinez-hamilton.com');
-INSERT INTO users VALUES ('similarBittern6', '1JxNcaIut7YEJ!1Thsxy', 'Seller', 'mitchelleduardo@gmail.com');
-INSERT INTO users VALUES ('contentCoconut3', 'gAh9T3sKLViEkUMg', 'Buyer', 'jonathan94@gmail.com');
-INSERT INTO users VALUES ('vengefulSnipe3', 'lsfqibExa', 'Seller', 'lisamcmillan@ferguson-french.com');
-INSERT INTO users VALUES ('puzzledGelding8', 'tpPKTksnifKtw', 'Seller', 'jenniferwilson@hotmail.com');
-INSERT INTO users VALUES ('crummyCaviar3', '8JbkSr5ryH54', 'Buyer', 'jenkinshayden@stewart-patterson.com');
-INSERT INTO users VALUES ('anxiousWhiting0', 'zwA71lHxN5Z', 'Seller', 'morgangreen@hotmail.com');
-INSERT INTO users VALUES ('jumpyWidgeon2', 'YkjGw3VLAs4', 'Seller', 'jonestodd@gmail.com');
-INSERT INTO users VALUES ('shyOryx1', 'B8mX1cjOul3rd1', 'Buyer', 'carriewhitaker@jones.com');
-INSERT INTO users VALUES ('blissfulMussel5', 'mfMcVCRs88Id96S', 'Buyer', 'cwright@ward.org');
-INSERT INTO users VALUES ('goofyJerky2', 'cV8lFDuUcR', 'Buyer', 'josephpeters@yahoo.com');
-INSERT INTO users VALUES ('worriedBaboon0', 'IM19vjdTxE', 'Buyer', 'maryhernandez@yahoo.com');
-INSERT INTO users VALUES ('blissfulClam3', 'YT51AauY!fvS', 'Seller', 'john14@hale-wang.com');
-INSERT INTO users VALUES ('grudgingCoati2', 'h1sLnKtTC6UGY9e2f', 'Seller', 'wchandler@hotmail.com');
-INSERT INTO users VALUES ('aloofClam7', 'KaxYxfYcQW3lmNt6CnIE', 'Buyer', 'jacobhamilton@west.biz');
-INSERT INTO users VALUES ('brainyToucan2', 'qb!rZWuU5apZIlacWXi1', 'Buyer', 'tiffany51@smith.com');
-INSERT INTO users VALUES ('mereQuiche4', 'XZAbNDYnWst', 'Buyer', 'ewilson@lewis-wilson.com');
-INSERT INTO users VALUES ('goofyCow0', '3XTllaTH', 'Buyer', 'imcconnell@hotmail.com');
-INSERT INTO users VALUES ('goofyRuffs8', 'nE!2bFk36mgJ', 'Seller', 'christinehernandez@hotmail.com');
-INSERT INTO users VALUES ('wingedLeopard1', 'hfJHcefI4ZFavpH62', 'Seller', 'vwood@hotmail.com');
-INSERT INTO users VALUES ('enragedCheese6', 'lXxRW2j9xDvx', 'Seller', 'rschroeder@yahoo.com');
-INSERT INTO users VALUES ('eagerLion5', 'tWkcekXaUxHY5', 'Seller', 'victor03@gmail.com');
-INSERT INTO users VALUES ('enragedRelish4', 'a1q8gMxfoua5UWEc', 'Seller', 'smithjustin@gmail.com');
-INSERT INTO users VALUES ('mildPear5', '4WvZnedp', 'Seller', 'lisabailey@mcmillan.com');
-INSERT INTO users VALUES ('yearningOatmeal8', '7sxxbFx6OK', 'Seller', 'silvaneil@pineda.com');
-INSERT INTO users VALUES ('guiltyViper7', 'NiWUK5Ektp!wh', 'Seller', 'emma35@ramsey.com');
-INSERT INTO users VALUES ('obsessedLard2', 'eCz65S!1tHYtsf', 'Buyer', 'lisadunlap@hotmail.com');
-INSERT INTO users VALUES ('cheerfulDunbird2', '43fjYMGcwvsXarl', 'Buyer', 'jennifersmith@underwood.com');
-INSERT INTO users VALUES ('dreadfulSnipe9', '2ShCeSA6GTjHdIh26', 'Seller', 'lisalucas@gmail.com');
-INSERT INTO users VALUES ('obsessedCurlew5', 'aPGdgvYqG', 'Buyer', 'jramos@hotmail.com');
-INSERT INTO users VALUES ('madThrush1', 'On!!8Td1', 'Buyer', 'tgill@gmail.com');
-INSERT INTO users VALUES ('offendedSeafowl9', 'YTQgG3I2kdyq', 'Seller', 'nelsontamara@yahoo.com');
-INSERT INTO users VALUES ('giddyCow4', '9liLO1p8SxVZ3g', 'Seller', 'trussell@gmail.com');
-INSERT INTO users VALUES ('insecureTermite5', 'rncMukqAoFqx4AiQh', 'Buyer', 'vhansen@burton.com');
-INSERT INTO users VALUES ('emptySheep4', 'lKTsq9jq', 'Buyer', 'latoya65@mckenzie.biz');
-INSERT INTO users VALUES ('debonairPie0', 'WN9XlFgS2N3urtIaLza', 'Buyer', 'ryanhill@hotmail.com');
-INSERT INTO users VALUES ('spiritedGarlic4', 'qEs7nBJk3RHJJ6nV', 'Seller', 'debbie22@lane.org');
-INSERT INTO users VALUES ('anxiousWidgeon3', 'Koo3!4t2aulNT', 'Seller', 'mobrien@thompson.com');
-INSERT INTO users VALUES ('mereOryx5', 'J4hRlTOh', 'Seller', 'matthew28@hotmail.com');
-INSERT INTO users VALUES ('mereMoth7', '17l!429LXdR', 'Buyer', 'cchavez@gonzalez.biz');
-INSERT INTO users VALUES ('cynicalSnail4', 'k2Rp5N1w3ac', 'Seller', 'nstewart@lyons.com');
-INSERT INTO users VALUES ('sadGnu7', 'QOaWYa4Pkacy', 'Buyer', 'amanda06@yahoo.com');
-INSERT INTO users VALUES ('mellowPolenta6', 'IvqBie59ZM', 'Seller', 'cmarshall@harrington.net');
-INSERT INTO users VALUES ('exactingWidgeon6', '!sorwz6RMqupBBC5jVZ', 'Seller', 'adamssusan@boyd.com');
-INSERT INTO users VALUES ('obsessedRuffs1', 'jj6Od7XlRzu', 'Seller', 'juliekent@montes.com');
-INSERT INTO users VALUES ('outlyingWigeon8', 'DoYiN4T3bm8PG3Wm', 'Seller', 'hoganandrea@gmail.com');
-INSERT INTO users VALUES ('pitifulEggs4', 'wfiwR4nATcDkALghrOWv', 'Buyer', 'james63@garcia.net');
-INSERT INTO users VALUES ('mildDingo3', 'UpfOGiAoc1SQH', 'Buyer', 'nicolegreen@tapia.com');
-INSERT INTO users VALUES ('humorousHawk1', 'Fpsf8yD6UwL4s', 'Buyer', 'larajerry@gmail.com');
-INSERT INTO users VALUES ('kindBuck7', '4Z5TsiSwbWLH!7PWQufy', 'Seller', 'jordan66@yahoo.com');
-INSERT INTO users VALUES ('lovesickShads8', '6rme67gDtJXGuRCQ3', 'Buyer', 'mary32@potter-hurst.com');
-INSERT INTO users VALUES ('affectedCardinal5', 'AL8m2Aoa2fH3Ol', 'Buyer', 'usherman@hotmail.com');
-INSERT INTO users VALUES ('fondBoa8', 'HEznOuEV3y3!Q6c9MRdp', 'Buyer', 'alexandramendoza@hotmail.com');
-INSERT INTO users VALUES ('wakefulPolenta8', 'gOujEU6wvviDQ4bkz', 'Seller', 'kingmanuel@abbott.info');
-INSERT INTO users VALUES ('peskyMussel2', 'xxH8GB6gS', 'Seller', 'michael39@bradley.info');
-INSERT INTO users VALUES ('bubblyPonie4', 'nkIddCp4ymaDLmBU', 'Buyer', 'allisonwade@hotmail.com');
-INSERT INTO users VALUES ('thriftyRat6', 'Ob3lA67M2sU', 'Seller', 'uwillis@hotmail.com');
-INSERT INTO users VALUES ('soreCheetah1', 'OyL!GzASx3dW', 'Buyer', 'sherrygonzalez@harrell.biz');
-INSERT INTO users VALUES ('superiorEagle9', 'c7FouhtEY8nHuSVQxy', 'Buyer', 'rachelhorton@brown.com');
-INSERT INTO users VALUES ('brainyFalcon4', 'RqIMAaYydukS', 'Buyer', 'bvelazquez@yahoo.com');
-INSERT INTO users VALUES ('affectedBoa5', 'AZEbmThJsDA8cV', 'Seller', 'gmiddleton@kemp.net');
-INSERT INTO users VALUES ('giddyEagle0', 'JPgHWOy5!', 'Seller', 'meyerdebbie@cain.org');
-INSERT INTO users VALUES ('panickySausage3', 'NxOpGSJoW', 'Seller', 'wdavis@miller.com');
+INSERT INTO users VALUES ('somberWidgeon2', SHA('AMTpkzbSiyVhdKqhsd'), 'Seller', 'mooredavid@stephens.com');
+INSERT INTO users VALUES ('sheepishMallard0', SHA('BoPc62KUUq!1'), 'Buyer', 'velasquezethan@yahoo.com');
+INSERT INTO users VALUES ('anxiousLapwing2', SHA('LKuFF7!taQO2fTi5Ix'), 'Seller', 'gsalas@velazquez.com');
+INSERT INTO users VALUES ('wakefulOil2', SHA('UMh7I2nRN4mce'), 'Buyer', 'williamsbenjamin@hotmail.com');
+INSERT INTO users VALUES ('lazyBittern2', SHA('9g818CJArRuFr3JE'), 'Seller', 'stevenwebb@gmail.com');
+INSERT INTO users VALUES ('eagerBuck6', SHA('oMCQfFb!zKNHK'), 'Seller', 'howellpatrick@gmail.com');
+INSERT INTO users VALUES ('holisticOatmeal2', SHA('E7mlrvvFmGyH7mHnIKc'), 'Buyer', 'zgallagher@ramirez-norman.com');
+INSERT INTO users VALUES ('zestySardines3', SHA('FzBHL6UcrLe28'), 'Buyer', 'grahamdavid@martinez-hamilton.com');
+INSERT INTO users VALUES ('similarBittern6', SHA('1JxNcaIut7YEJ!1Thsxy'), 'Seller', 'mitchelleduardo@gmail.com');
+INSERT INTO users VALUES ('contentCoconut3', SHA('gAh9T3sKLViEkUMg'), 'Buyer', 'jonathan94@gmail.com');
+INSERT INTO users VALUES ('vengefulSnipe3', SHA('lsfqibExa'), 'Seller', 'lisamcmillan@ferguson-french.com');
+INSERT INTO users VALUES ('puzzledGelding8', SHA('tpPKTksnifKtw'), 'Seller', 'jenniferwilson@hotmail.com');
+INSERT INTO users VALUES ('crummyCaviar3', SHA('8JbkSr5ryH54'), 'Buyer', 'jenkinshayden@stewart-patterson.com');
+INSERT INTO users VALUES ('anxiousWhiting0', SHA('zwA71lHxN5Z'), 'Seller', 'morgangreen@hotmail.com');
+INSERT INTO users VALUES ('jumpyWidgeon2', SHA('YkjGw3VLAs4'), 'Seller', 'jonestodd@gmail.com');
+INSERT INTO users VALUES ('shyOryx1', SHA('B8mX1cjOul3rd1'), 'Buyer', 'carriewhitaker@jones.com');
+INSERT INTO users VALUES ('blissfulMussel5', SHA('mfMcVCRs88Id96S'), 'Buyer', 'cwright@ward.org');
+INSERT INTO users VALUES ('goofyJerky2', SHA('cV8lFDuUcR'), 'Buyer', 'josephpeters@yahoo.com');
+INSERT INTO users VALUES ('worriedBaboon0', SHA('IM19vjdTxE'), 'Buyer', 'maryhernandez@yahoo.com');
+INSERT INTO users VALUES ('blissfulClam3', SHA('YT51AauY!fvS'), 'Seller', 'john14@hale-wang.com');
+INSERT INTO users VALUES ('grudgingCoati2', SHA('h1sLnKtTC6UGY9e2f'), 'Seller', 'wchandler@hotmail.com');
+INSERT INTO users VALUES ('aloofClam7', SHA('KaxYxfYcQW3lmNt6CnIE'), 'Buyer', 'jacobhamilton@west.biz');
+INSERT INTO users VALUES ('brainyToucan2', SHA('qb!rZWuU5apZIlacWXi1'), 'Buyer', 'tiffany51@smith.com');
+INSERT INTO users VALUES ('mereQuiche4', SHA('XZAbNDYnWst'), 'Buyer', 'ewilson@lewis-wilson.com');
+INSERT INTO users VALUES ('goofyCow0', SHA('3XTllaTH'), 'Buyer', 'imcconnell@hotmail.com');
+INSERT INTO users VALUES ('goofyRuffs8', SHA('nE!2bFk36mgJ'), 'Seller', 'christinehernandez@hotmail.com');
+INSERT INTO users VALUES ('wingedLeopard1', SHA('hfJHcefI4ZFavpH62'), 'Seller', 'vwood@hotmail.com');
+INSERT INTO users VALUES ('enragedCheese6', SHA('lXxRW2j9xDvx'), 'Seller', 'rschroeder@yahoo.com');
+INSERT INTO users VALUES ('eagerLion5', SHA('tWkcekXaUxHY5'), 'Seller', 'victor03@gmail.com');
+INSERT INTO users VALUES ('enragedRelish4', SHA('a1q8gMxfoua5UWEc'), 'Seller', 'smithjustin@gmail.com');
+INSERT INTO users VALUES ('mildPear5', SHA('4WvZnedp'), 'Seller', 'lisabailey@mcmillan.com');
+INSERT INTO users VALUES ('yearningOatmeal8', SHA('7sxxbFx6OK'), 'Seller', 'silvaneil@pineda.com');
+INSERT INTO users VALUES ('guiltyViper7', SHA('NiWUK5Ektp!wh'), 'Seller', 'emma35@ramsey.com');
+INSERT INTO users VALUES ('obsessedLard2', SHA('eCz65S!1tHYtsf'), 'Buyer', 'lisadunlap@hotmail.com');
+INSERT INTO users VALUES ('cheerfulDunbird2', SHA('43fjYMGcwvsXarl'), 'Buyer', 'jennifersmith@underwood.com');
+INSERT INTO users VALUES ('dreadfulSnipe9', SHA('2ShCeSA6GTjHdIh26'), 'Seller', 'lisalucas@gmail.com');
+INSERT INTO users VALUES ('obsessedCurlew5', SHA('aPGdgvYqG'), 'Buyer', 'jramos@hotmail.com');
+INSERT INTO users VALUES ('madThrush1', SHA('On!!8Td1'), 'Buyer', 'tgill@gmail.com');
+INSERT INTO users VALUES ('offendedSeafowl9', SHA('YTQgG3I2kdyq'), 'Seller', 'nelsontamara@yahoo.com');
+INSERT INTO users VALUES ('giddyCow4', SHA('9liLO1p8SxVZ3g'), 'Seller', 'trussell@gmail.com');
+INSERT INTO users VALUES ('insecureTermite5', SHA('rncMukqAoFqx4AiQh'), 'Buyer', 'vhansen@burton.com');
+INSERT INTO users VALUES ('emptySheep4', SHA('lKTsq9jq'), 'Buyer', 'latoya65@mckenzie.biz');
+INSERT INTO users VALUES ('debonairPie0', SHA('WN9XlFgS2N3urtIaLza'), 'Buyer', 'ryanhill@hotmail.com');
+INSERT INTO users VALUES ('spiritedGarlic4', SHA('qEs7nBJk3RHJJ6nV'), 'Seller', 'debbie22@lane.org');
+INSERT INTO users VALUES ('anxiousWidgeon3', SHA('Koo3!4t2aulNT'), 'Seller', 'mobrien@thompson.com');
+INSERT INTO users VALUES ('mereOryx5', SHA('J4hRlTOh'), 'Seller', 'matthew28@hotmail.com');
+INSERT INTO users VALUES ('mereMoth7', SHA('17l!429LXdR'), 'Buyer', 'cchavez@gonzalez.biz');
+INSERT INTO users VALUES ('cynicalSnail4', SHA('k2Rp5N1w3ac'), 'Seller', 'nstewart@lyons.com');
+INSERT INTO users VALUES ('sadGnu7', SHA('QOaWYa4Pkacy'), 'Buyer', 'amanda06@yahoo.com');
+INSERT INTO users VALUES ('mellowPolenta6', SHA('IvqBie59ZM'), 'Seller', 'cmarshall@harrington.net');
+INSERT INTO users VALUES ('exactingWidgeon6', SHA('!sorwz6RMqupBBC5jVZ'), 'Seller', 'adamssusan@boyd.com');
+INSERT INTO users VALUES ('obsessedRuffs1', SHA('jj6Od7XlRzu'), 'Seller', 'juliekent@montes.com');
+INSERT INTO users VALUES ('outlyingWigeon8', SHA('DoYiN4T3bm8PG3Wm'), 'Seller', 'hoganandrea@gmail.com');
+INSERT INTO users VALUES ('pitifulEggs4', SHA('wfiwR4nATcDkALghrOWv'), 'Buyer', 'james63@garcia.net');
+INSERT INTO users VALUES ('mildDingo3', SHA('UpfOGiAoc1SQH'), 'Buyer', 'nicolegreen@tapia.com');
+INSERT INTO users VALUES ('humorousHawk1', SHA('Fpsf8yD6UwL4s'), 'Buyer', 'larajerry@gmail.com');
+INSERT INTO users VALUES ('kindBuck7', SHA('4Z5TsiSwbWLH!7PWQufy'), 'Seller', 'jordan66@yahoo.com');
+INSERT INTO users VALUES ('lovesickShads8', SHA('6rme67gDtJXGuRCQ3'), 'Buyer', 'mary32@potter-hurst.com');
+INSERT INTO users VALUES ('affectedCardinal5', SHA('AL8m2Aoa2fH3Ol'), 'Buyer', 'usherman@hotmail.com');
+INSERT INTO users VALUES ('fondBoa8', SHA('HEznOuEV3y3!Q6c9MRdp'), 'Buyer', 'alexandramendoza@hotmail.com');
+INSERT INTO users VALUES ('wakefulPolenta8', SHA('gOujEU6wvviDQ4bkz'), 'Seller', 'kingmanuel@abbott.info');
+INSERT INTO users VALUES ('peskyMussel2', SHA('xxH8GB6gS'), 'Seller', 'michael39@bradley.info');
+INSERT INTO users VALUES ('bubblyPonie4', SHA('nkIddCp4ymaDLmBU'), 'Buyer', 'allisonwade@hotmail.com');
+INSERT INTO users VALUES ('thriftyRat6', SHA('Ob3lA67M2sU'), 'Seller', 'uwillis@hotmail.com');
+INSERT INTO users VALUES ('soreCheetah1', SHA('OyL!GzASx3dW'), 'Buyer', 'sherrygonzalez@harrell.biz');
+INSERT INTO users VALUES ('superiorEagle9', SHA('c7FouhtEY8nHuSVQxy'), 'Buyer', 'rachelhorton@brown.com');
+INSERT INTO users VALUES ('brainyFalcon4', SHA('RqIMAaYydukS'), 'Buyer', 'bvelazquez@yahoo.com');
+INSERT INTO users VALUES ('affectedBoa5', SHA('AZEbmThJsDA8cV'), 'Seller', 'gmiddleton@kemp.net');
+INSERT INTO users VALUES ('giddyEagle0', SHA('JPgHWOy5!'), 'Seller', 'meyerdebbie@cain.org');
+INSERT INTO users VALUES ('panickySausage3', SHA('NxOpGSJoW'), 'Seller', 'wdavis@miller.com');
+
 
 
 /*
@@ -1097,3 +1090,27 @@ INSERT INTO WatchList VALUES ('worriedBaboon0', 30);
 INSERT INTO WatchList VALUES ('obsessedCurlew5', 61);
 INSERT INTO WatchList VALUES ('sheepishMallard0', 69);
 INSERT INTO watchlist VALUES ('affectedCardinal5', 5);
+
+/*
+    Create User and grant permission for use in PHP
+*/
+
+DROP USER IF EXISTS 'AuctionUser'@'localhost';
+CREATE USER 'AuctionUser'@'localhost' IDENTIFIED BY 'PasswordAuctionViewDBMS2020';
+GRANT ALL PRIVILEGES ON Auction.* TO 'AuctionUser'@'localhost';
+
+DROP USER IF EXISTS 'AuctionUserView'@'localhost';
+CREATE USER 'AuctionUserView'@'localhost' IDENTIFIED BY 'PasswordAuctionViewDBMS2020';
+GRANT SELECT ON Auction.* TO 'AuctionUserView'@'localhost';
+
+DROP USER IF EXISTS 'AuctionUserCreateAuction'@'localhost';
+CREATE USER 'AuctionUserCreateAuction'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateAuctionDBMS2020';
+GRANT INSERT ON Auction.auctions TO 'AuctionUserCreateAuction'@'localhost';
+
+DROP USER IF EXISTS 'AuctionUserCreateCreateUser'@'localhost';
+CREATE USER 'AuctionUserCreateCreateUser'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateUserDBMS2020';
+GRANT INSERT ON Auction.users TO 'AuctionUserCreateCreateUser'@'localhost';
+
+DROP USER IF EXISTS 'AuctionUserCreateCreateWatchList'@'localhost';
+CREATE USER 'AuctionUserCreateCreateWatchList'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateWatchListDBMS2020';
+GRANT SELECT ON Auction.watchlist TO 'AuctionUserCreateCreateUser'@'localhost';
