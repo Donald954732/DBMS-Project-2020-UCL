@@ -1,8 +1,7 @@
 <?php
-$servername = "localhost";
-$username = "AuctionUserView";
-$password = "PasswordAuctionViewDBMS2020";
-$table = "Auction";
+  var_dump($_post); echo "<br />";
+  $user = array();
+
 
 // Create connection
 $connectionView = new mysqli($servername, $username, $password, $table);
@@ -12,6 +11,7 @@ if ($connectionView->connect_error) {
   die("Connection failed: " . $connectionView->connect_error);
 }
 echo "Connected successfully";
+
 
 
 $querryItemList = "SELECT ROW_NUMBER() OVER(".$ordering.") AS 'RowNum', a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
