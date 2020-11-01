@@ -939,6 +939,7 @@ INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime, Outcome) VALUES ('humo
 INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime, Outcome) VALUES ('mildDingo3', 66, 7522.83, '2020-11-17 09:59:20', 'Pending');
 INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime, Outcome) VALUES ('soreCheetah1', 42, 4429.59, '2020-10-24 11:00:02', 'Pending');
 INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime, Outcome) VALUES ('madThrush1', 32, 998.48, '2020-10-29 05:24:09', 'Pending');
+INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime, Outcome) VALUES ('goofyCow0', 71, 998.48, '2020-10-29 05:24:09', 'Pending');
 
 DROP TABLE IF EXISTS WatchList;
 CREATE TABLE WatchList (

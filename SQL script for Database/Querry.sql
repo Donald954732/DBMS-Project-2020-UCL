@@ -145,10 +145,10 @@ WHERE w.AuctionID = 5 AND w.UserName NOT IN (
 */
 
 ---code with variable
-SELECT b.AuctionID, (COUNT(b.UserName) / Count(b.UserName) OVER ()) AS 'Recommandation chance',
+SELECT b.AuctionID, (COUNT(b.UserName) AS 'RecommandationChance',
 a.ItemName, a.ItemDescription, a.StartingPrice, 
-TIMEDIFF(a.EndingTime, CURRENT_TIMESTAMP()) AS 'Time Remaining', COUNT(b.BidID) AS 'No. Of Bids', 
-MAX(b.BidPrice) AS 'Current Price'
+TIMEDIFF(a.EndingTime, CURRENT_TIMESTAMP()) AS 'TimeRemaining', COUNT(b.BidID) AS 'No.OfBids', 
+MAX(b.BidPrice) AS 'CurrentPrice'
 FROM bids b JOIN auctions a on b.AuctionID = a.AuctionID
 WHERE b.UserName IN (SELECT Username
                     FROM bids
@@ -158,7 +158,7 @@ WHERE b.UserName IN (SELECT Username
                         WHERE UserName = $currentUser
                     ) AND NOT UserName = $currentUser)
 GROUP BY b.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime
-ORDER BY (COUNT(b.UserName) / Count(b.UserName) OVER ()) DESC;
+ORDER BY (COUNT(b.UserName) DESC;
 
 
 

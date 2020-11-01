@@ -24,7 +24,7 @@ if (mysqli_num_rows($resultLogin) == 1){
         $_SESSION['logged_in'] = true;
         echo $_SESSION['logged_in'];
         $_SESSION['username'] = $UserInfo['UserName'];
-        $_SESSION['account_type'] = $UserInfo['UserGroup'];
+        $_SESSION['account_type'] = strtolower($UserInfo['UserGroup']);
 
         echo('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
     }
