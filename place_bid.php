@@ -5,7 +5,7 @@
 <?php require("utilities.php")?>
 
 
-<?php ////
+<?php 
   $username = $_SESSION['username'];
   if(isset($_POST["bid"])){
     $bid = $_POST['bid'];
