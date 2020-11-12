@@ -3,7 +3,8 @@
 <?php include 'database.php'; ?>
 
 <div class="container">
-<h2 class="my-3">Register new account</h2>
+<h1 class="my-3">Register an account</h1>
+<hr>
 
 <!-- Create auction form -->
 <form method="POST" action="process_registration.php">
