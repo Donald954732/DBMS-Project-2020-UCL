@@ -1,9 +1,11 @@
+//place bid function only works when connectionview user has ability to modify bids table
+
 <?php include_once("header.php")?>
 <?php include 'database.php'; ?>
 <?php require("utilities.php")?>
 
 
-<?php 
+<?php ////
   $username = $_SESSION['username'];
   if(isset($_POST["bid"])){
     $bid = $_POST['bid'];
@@ -34,11 +36,14 @@
   
   //Insert new bid
   $query = "INSERT INTO bids (UserName, AuctionID, BidPrice, Bidtime, Outcome) VALUES ('$username', $item_id, $bid, NOW(), 'Pending')"; 
-  $result = mysqli_query($connectionView,$query);
-
+  if ($result = mysqli_query($connectionView,$query)){
+    echo 'Bid placed successfully';
+  }
+  else {
+    echo 'Bid could not be placed';
+  }
   mysqli_close($connection);
   header("refresh:2;url=listing.php?item_id=" . $item_id);
+// could add navigation options later
 
 ?>
-
-
