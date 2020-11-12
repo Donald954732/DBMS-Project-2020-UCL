@@ -3,7 +3,7 @@
 <?php require("utilities.php")?>
 
 
-<?php ////
+<?php 
   $username = $_SESSION['username'];
   if(isset($_POST["bid"])){
     $bid = $_POST['bid'];
@@ -13,9 +13,9 @@
 <?php  
 
   //check user exists and is buyer 
+
   $queryusertype = "SELECT UserGroup, username FROM Users where username = '$username'";
-  $resultusertype = mysqli_query($connectionView, $queryusertype)
-    or die("MySQL query error." . mysql_error($connectionview));
+  $resultusertype = mysqli_query($connectionView, $queryusertype);
   $UserInfo = mysqli_fetch_array($resultusertype) ;
   $UserType = $UserInfo['UserGroup'];
 
@@ -28,17 +28,17 @@
 
   //check auction exists and is running 
   $query = "SELECT AuctionID FROM auctions WHERE AuctionID = $item_id AND EndingTime > CURDATE()";
-  $result = mysqli_query($connectionView,$query)
-    or die("MySQL query error." . mysql_error($connectionview));
+  $result = mysqli_query($connectionView,$query);
   if (mysqli_num_rows($result)<1)
     die("Auction finished");
   
   //Insert new bid
   $query = "INSERT INTO bids (UserName, AuctionID, BidPrice, Bidtime, Outcome) VALUES ('$username', $item_id, $bid, NOW(), 'Pending')"; 
-  $result = mysqli_query($connectionView,$query)
-    or die("MySQL query error." . mysql_error($connectionview));
+  $result = mysqli_query($connectionView,$query);
 
   mysqli_close($connection);
   header("refresh:2;url=listing.php?item_id=" . $item_id);
 
 ?>
+
+
