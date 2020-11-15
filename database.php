@@ -29,7 +29,7 @@ $connectionAddAuction = new mysqli($servername, $username, $password, $table);
 if ($connectionAddAuction->connect_error) {
   die("Connection failed: " . $connectionAddAuction->connect_error);
 }
-echo "Connected successfully auctionCreate";
+//echo "Connected successfully auctionCreate";
 ?>
 
 <?php
@@ -46,7 +46,7 @@ $connectionAddUser = new mysqli($servername, $username, $password, $table);
 if ($connectionAddUser->connect_error) {
   die("Connection failed: " . $connectionAddUser->connect_error);
 }
-echo "Connected successfully userCreate";
+//echo "Connected successfully userCreate";
 ?>
 <?php
 //$connectionAddWatchlist is for creating Auction
@@ -62,5 +62,5 @@ $connectionAddWatchlist = new mysqli($servername, $username, $password, $table);
 if ($connectionAddWatchlist->connect_error) {
   die("Connection failed: " . $connectionAddWatchlist->connect_error);
 }
-echo "Connected successfully WatchlistCreate";
+//echo "Connected successfully WatchlistCreate";
 ?>
