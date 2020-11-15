@@ -4,6 +4,7 @@
 <?php
 if(isset($_POST["Submit"]) && $_POST["Submit"] == "Register") 
 {
+    $Username = $_POST["username"];
     $Email = $_POST["email"];
     $Password = $_POST["password"];
     $Passwordconfirm = $_POST["passwordConfirmation"];

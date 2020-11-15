@@ -20,6 +20,13 @@
         <label class="form-check-label" for="accountSeller">Seller</label>
       </div>
       <small id="accountTypeHelp" class="form-text-inline text-muted"><span class="text-danger">* Required.</span></small>
+  </div>
+  </div>
+  <div class="form-group row">
+    <label for="username" class="col-sm-2 col-form-label text-right">Username</label>
+	<div class="col-sm-10">
+      <input type="text" class="form-control" id="username" placeholder="Username">
+      <small id="usernameHelp" class="form-text text-muted"><span class="text-danger">* Required.</span></small>
 	</div>
   </div>
   <div class="form-group row">
