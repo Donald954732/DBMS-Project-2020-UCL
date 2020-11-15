@@ -14,3 +14,53 @@ if ($connectionView->connect_error) {
 }
 //echo "Connected successfully";
 ?>
+
+<?php
+//$connectionAddAuction is for creating Auction
+$servername = "localhost";
+$username = "AuctionUserCreateAuction";
+$password = "PasswordAuctionCreateAuctionDBMS2020";
+$table = "Auction";
+
+// Create connection
+$connectionAddAuction = new mysqli($servername, $username, $password, $table);
+
+// Check connection
+if ($connectionAddAuction->connect_error) {
+  die("Connection failed: " . $connectionAddAuction->connect_error);
+}
+echo "Connected successfully auctionCreate";
+?>
+
+<?php
+//$connectionAddUser is for creating Auction
+$servername = "localhost";
+$username = "AuctionUserCreateCreateUser";
+$password = "PasswordAuctionCreateUserDBMS2020";
+$table = "Auction";
+
+// Create connection
+$connectionAddUser = new mysqli($servername, $username, $password, $table);
+
+// Check connection
+if ($connectionAddUser->connect_error) {
+  die("Connection failed: " . $connectionAddUser->connect_error);
+}
+echo "Connected successfully userCreate";
+?>
+<?php
+//$connectionAddWatchlist is for creating Auction
+$servername = "localhost";
+$username = "AuctionUserCreateCreateWatchList";
+$password = "PasswordAuctionCreateWatchListDBMS2020";
+$table = "Auction";
+
+// Create connection
+$connectionAddWatchlist = new mysqli($servername, $username, $password, $table);
+
+// Check connection
+if ($connectionAddWatchlist->connect_error) {
+  die("Connection failed: " . $connectionAddWatchlist->connect_error);
+}
+echo "Connected successfully WatchlistCreate";
+?>
