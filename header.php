@@ -7,6 +7,7 @@
   //$_SESSION['logged_in'] = false;
   //$_SESSION['account_type'] = 'seller';
 ?>
+<?php require("database.php")?>
 
 
 <!doctype html>
@@ -22,7 +23,7 @@
   <!-- Custom CSS file -->
   <link rel="stylesheet" href="css/custom.css">
 
-  <title>[My Auction Site] <!--CHANGEME!--></title>
+  <title>[Group 11 Auction Site] <!--CHANGEME!--></title>
 </head>
 
 
@@ -30,15 +31,27 @@
 
 <!-- Navbars -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light mx-2">
-  <a class="navbar-brand" href="#">Site Name <!--CHANGEME!--></a>
+  <a class="navbar-brand" href="#">Group 11 Auction Site<!--CHANGEME!--></a>
   <ul class="navbar-nav ml-auto">
-    <li class="nav-item">
+    <li class="nav-item dropdown">
     
 <?php
   // Displays either login or logout on the right, depending on user's
   // current status (session).
   if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
-    echo '<a class="nav-link" href="logout.php">Logout</a>';
+    $querryUser = "SELECT Email, UserGroup FROM auction.users WHERE Username = '".$_SESSION['username']."'";
+    //echo $querryUser;
+    $resultUser = mysqli_query($connectionView, $querryUser);
+    $arrayUser = mysqli_fetch_array($resultUser);
+    echo "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>User</a>".
+    "<div class='dropdown-menu dropdown-menu-right' aria-labelledby='navbarDropdown'>".
+    "<a class='dropdown-item' href='#'>User Name: ".$_SESSION['username']."</a>".
+    "<a class='dropdown-item' href='#'>Email: ".$arrayUser['Email']."</a>".
+    "<a class='dropdown-item' href='#'>User Group: ".$arrayUser['UserGroup']."</a>".
+    "<div class='dropdown-divider'></div>".
+    "<a class='dropdown-item' href='logout.php'>Logout</a>";
+
+
     //echo $_SESSION['logged_in'];
   }
   else {
@@ -46,7 +59,7 @@
     //echo $_SESSION['logged_in'];
   }
 ?>
-
+      </div>
     </li>
   </ul>
 </nav>
