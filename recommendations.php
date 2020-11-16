@@ -22,12 +22,53 @@
       if ($_SESSION['account_type'] == 'buyer'){
       // Done - Donad: Perform a query to pull up auctions they might be interested in.
       //echo $_SESSION['username'];
-      $recommendQuerry = "SELECT a.AuctionID, COUNT(b.UserName) AS 'RecommandationChance', a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
-      "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'bidPrice', IF(MAX(bidPrice) IS NULL, a.StartingPrice, MAX(bidPrice))  AS 'CurrentPrice', a.StartingPrice ".
-      "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
-      "WHERE b.UserName IN (SELECT Username FROM bids WHERE auctionID IN (SELECT AuctionID FROM bids WHERE UserName = '".
-      $_SESSION['username']."' ) AND NOT UserName = '".$_SESSION['username']."' ) AND (a.EndingTime - CURRENT_TIMESTAMP) > 0 GROUP BY a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime ".
-      "ORDER BY COUNT(b.UserName) DESC";
+      
+      $recommendQuerry = <<<QUERRYTEXT
+    SELECT
+      a.AuctionID,
+      COUNT(b.UserName) AS 'RecommandationChance',
+      a.ItemName,
+      a.ItemDescription,
+      a.StartingPrice,
+      a.EndingTime,
+      COUNT(b.BidID) AS 'CountBids',
+      MAX(b.BidPrice) AS 'bidPrice',
+      IF(
+        MAX(bidPrice) IS NULL,
+        a.StartingPrice,
+        MAX(bidPrice)
+      ) AS 'CurrentPrice'
+    FROM
+      auctions a
+      LEFT JOIN bids b ON a.AuctionID = b.AuctionID
+    WHERE
+      b.UserName IN (
+        SELECT
+          Username
+        FROM
+          bids
+        WHERE
+          auctionID IN (
+            SELECT
+              AuctionID
+            FROM
+              bids
+            WHERE
+              UserName = '{$_SESSION['username']}'
+          )
+          AND NOT UserName = '{$_SESSION['username']}}'
+      )
+      AND (a.EndingTime - CURRENT_TIMESTAMP) > 0
+    GROUP BY
+      a.AuctionID,
+      a.ItemName,
+      a.ItemDescription,
+      a.StartingPrice,
+      a.EndingTime
+    ORDER BY
+      COUNT(b.UserName) DESC  
+QUERRYTEXT;
+      //echo $recommendQuerry;
       //echo $recommendQuerry;
       //echo $_SESSION['account_type'];
       $resultforRecommend = mysqli_query($connectionView, $recommendQuerry);
