@@ -91,10 +91,9 @@
           <span class="input-group-text">£</span>
         </div>
 	    <input type="number" class="form-control" id="bid" name="bid">
-	    <input type = "hidden" name = "itemid" value = <?php echo $item_id;?>>
+	    <input type = "hidden" name = "itemid" value = <?php echo $item_id;?> >
       </div>
-      <button type="submit" class="btn btn-primary form-control">Place 
-	    </button>
+      <button type="submit" class="btn btn-primary form-control">Place bid</button>
     </form>
 <?php endif ?>
 
