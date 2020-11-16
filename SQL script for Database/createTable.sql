@@ -1119,4 +1119,4 @@ GRANT INSERT ON Auction.watchlist TO 'AuctionUserCreateWatchList'@'localhost';
 
 DROP USER IF EXISTS 'AuctionUserCreateBids'@'localhost';
 CREATE USER 'AuctionUserCreateBids'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateBidsDBMS2020';
-GRANT INSERT ON Auction.watchlist TO 'AuctionUserCreateBids'@'localhost';
+GRANT INSERT ON Auction.Bids TO 'AuctionUserCreateBids'@'localhost';

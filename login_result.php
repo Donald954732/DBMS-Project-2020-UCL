@@ -9,7 +9,7 @@ $LoginUsername = $_POST['Username'];
 $LoginPasswordhash = sha1($_POST['password']);
 //echo $LoginUsername;
 //echo $LoginPasswordhash;
-$LoginQuerry = "SELECT UserName, AuthPassWord, UserGroup FROM auction.users WHERE UserName='".$LoginUsername."'";
+$LoginQuerry = "SELECT UserName, AuthPassWord, UserGroup, Email FROM auction.users WHERE UserName='".$LoginUsername."'";
 //AND AuthPassWord = '".$LoginPasswordhash."'"
 
 //echo $LoginQuerry;
@@ -25,6 +25,7 @@ if (mysqli_num_rows($resultLogin) == 1){
         echo $_SESSION['logged_in'];
         $_SESSION['username'] = $UserInfo['UserName'];
         $_SESSION['account_type'] = strtolower($UserInfo['UserGroup']);
+        $_SESSION['email'] = strtolower($UserInfo['Email']);
 
         echo('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
     }

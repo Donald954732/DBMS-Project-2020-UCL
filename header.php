@@ -23,7 +23,7 @@
   <!-- Custom CSS file -->
   <link rel="stylesheet" href="css/custom.css">
 
-  <title>[Group 11 Auction Site] <!--CHANGEME!--></title>
+  <title>Group 11 Auction Site</title>
 </head>
 
 
@@ -31,7 +31,7 @@
 
 <!-- Navbars -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light mx-2">
-  <a class="navbar-brand" href="#">Group 11 Auction Site<!--CHANGEME!--></a>
+  <a class="navbar-brand" href="#">Group 11 Auction Site</a>
   <ul class="navbar-nav ml-auto">
     <li class="nav-item dropdown">
     
@@ -39,15 +39,11 @@
   // Displays either login or logout on the right, depending on user's
   // current status (session).
   if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
-    $querryUser = "SELECT Email, UserGroup FROM auction.users WHERE Username = '".$_SESSION['username']."'";
-    //echo $querryUser;
-    $resultUser = mysqli_query($connectionView, $querryUser);
-    $arrayUser = mysqli_fetch_array($resultUser);
     echo "<a class='nav-link dropdown-toggle' href='#' id='navbarDropdown' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>User</a>".
     "<div class='dropdown-menu dropdown-menu-right' aria-labelledby='navbarDropdown'>".
     "<a class='dropdown-item' href='#'>User Name: ".$_SESSION['username']."</a>".
-    "<a class='dropdown-item' href='#'>Email: ".$arrayUser['Email']."</a>".
-    "<a class='dropdown-item' href='#'>User Group: ".$arrayUser['UserGroup']."</a>".
+    "<a class='dropdown-item' href='#'>Email: ".$_SESSION['email']."</a>".
+    "<a class='dropdown-item' href='#'>User Group: ".$_SESSION['account_type']."</a>".
     "<div class='dropdown-divider'></div>".
     "<a class='dropdown-item' href='logout.php'>Logout</a>";
 
@@ -90,6 +86,101 @@
 ?>
   </ul>
 </nav>
+<?php
+if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
+  if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
+  $querryOutbid = <<<QUERRYTEXT
+SELECT *
+FROM
+  (
+    SELECT
+      a.AuctionID,
+      a.ItemName,
+      a.StartingPrice,
+      MAX(b.BidPrice) AS 'bidPrice',
+      IF(
+        MAX(bidPrice) IS NULL,
+        a.StartingPrice,
+        MAX(bidPrice)
+      ) AS 'CurrentPrice'
+    FROM
+      auctions a
+      LEFT JOIN bids b ON a.AuctionID = b.AuctionID
+    WHERE
+      (a.EndingTime - CURRENT_TIMESTAMP) > 0
+      AND a.AuctionID IN (
+        SELECT
+          AuctionID
+        FROM
+          bids
+        WHERE
+          UserName = '{$_SESSION['username']}'
+        GROUP BY
+          AuctionID
+      )
+    GROUP BY
+      a.AuctionID,
+      a.ItemName,
+      a.ItemDescription,
+      a.StartingPrice,
+      a.EndingTime
+  ) MaxPriceGlobal
+  INNER JOIN (
+    SELECT
+      AuctionID,
+      MAX(BidPrice) AS UserMax
+    FROM
+      bids
+    WHERE
+      UserName = '{$_SESSION['username']}'
+    GROUP BY
+      AuctionID
+  ) MaxPriceUser ON MaxPriceGlobal.AuctionID = MaxPriceUser.AuctionID
+WHERE
+  MaxPriceGlobal.CurrentPrice != MaxPriceUser.UserMax 
+QUERRYTEXT;
+//echo $querryOutbid;
+$resultOutbid = mysqli_query($connectionView, $querryOutbid);
+//echo $querryOutbid;
+if (empty(mysqli_fetch_array($resultOutbid)) != TRUE) {
+
+echo <<<TABLEPARTS
+<div class="alert alert-warning alert-dismissible fade show" role="alert">
+  <strong>Some of the items you bidded is being outbidded by other user!</strong>
+  <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Auction ID</th>
+      <th scope="col">Name Of Item</th>
+      <th scope="col">Current Bid Price (£)</th>
+      <th scope="col">Your Bid (£)</th>
+    </tr>
+  </thead>
+  <tbody>
+TABLEPARTS;
+while ($row = mysqli_fetch_array($resultOutbid)){
+echo <<<ROWPARTS
+    <tr>
+      <th scope="row">{$row['AuctionID']}</th>
+      <td>{$row['ItemName']}</td>
+      <td>{$row['CurrentPrice']}</td>
+      <td>{$row['UserMax']}</td>
+    </tr>
+ROWPARTS;
+}
+echo <<<TABLEPARTS
+  </tbody>
+</table>
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+TABLEPARTS;
+   }
+ }
+}
+
+?>
 
 <!-- Login modal -->
 <div class="modal fade" id="loginModal">

@@ -7,11 +7,34 @@
   $item_id = $_GET['item_id'];
 
   // TODO: Use item_id to make a query to the database. -- Done, Donald
-  $querryCurrentItem = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
-  "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'bidPrice', IF(MAX(bidPrice) IS NULL, a.StartingPrice, MAX(bidPrice))  AS 'CurrentPrice', a.StartingPrice ".
-  "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
-  "WHERE a.AuctionID = ".$item_id." ".
-  "GROUP BY a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime";
+  $querryCurrentItem = <<<QUERRYTEXT
+  SELECT
+  a.AuctionID,
+  a.ItemName,
+  a.ItemDescription,
+  a.StartingPrice,
+  a.EndingTime,
+  COUNT(b.BidID) AS 'CountBids',
+  MAX(b.BidPrice) AS 'bidPrice',
+  IF(
+    MAX(bidPrice) IS NULL,
+    a.StartingPrice,
+    MAX(bidPrice)
+  ) AS 'CurrentPrice',
+  a.StartingPrice
+FROM
+  auctions a
+  LEFT JOIN bids b ON a.AuctionID = b.AuctionID
+WHERE
+  a.AuctionID = {$item_id}
+GROUP BY
+  a.AuctionID,
+  a.ItemName,
+  a.ItemDescription,
+  a.StartingPrice,
+  a.EndingTime
+QUERRYTEXT;
+  //echo $querryCurrentItem;
   // DELETEME: For now, using placeholder data.
   //echo $querryCurrentItem;
   $ItemResult = mysqli_query($connectionView, $querryCurrentItem);
