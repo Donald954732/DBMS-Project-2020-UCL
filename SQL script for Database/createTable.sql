@@ -1109,10 +1109,14 @@ DROP USER IF EXISTS 'AuctionUserCreateAuction'@'localhost';
 CREATE USER 'AuctionUserCreateAuction'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateAuctionDBMS2020';
 GRANT INSERT ON Auction.auctions TO 'AuctionUserCreateAuction'@'localhost';
 
-DROP USER IF EXISTS 'AuctionUserCreateCreateUser'@'localhost';
-CREATE USER 'AuctionUserCreateCreateUser'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateUserDBMS2020';
-GRANT INSERT ON Auction.users TO 'AuctionUserCreateCreateUser'@'localhost';
+DROP USER IF EXISTS 'AuctionUserCreateUser'@'localhost';
+CREATE USER 'AuctionUserCreateUser'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateUserDBMS2020';
+GRANT INSERT ON Auction.users TO 'AuctionUserCreateUser'@'localhost';
 
-DROP USER IF EXISTS 'AuctionUserCreateCreateWatchList'@'localhost';
-CREATE USER 'AuctionUserCreateCreateWatchList'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateWatchListDBMS2020';
-GRANT INSERT ON Auction.watchlist TO 'AuctionUserCreateCreateWatchList'@'localhost';
+DROP USER IF EXISTS 'AuctionUserCreateWatchList'@'localhost';
+CREATE USER 'AuctionUserCreateWatchList'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateWatchListDBMS2020';
+GRANT INSERT ON Auction.watchlist TO 'AuctionUserCreateWatchList'@'localhost';
+
+DROP USER IF EXISTS 'AuctionUserCreateBids'@'localhost';
+CREATE USER 'AuctionUserCreateBids'@'localhost' IDENTIFIED BY 'PasswordAuctionCreateBidsDBMS2020';
+GRANT INSERT ON Auction.watchlist TO 'AuctionUserCreateBids'@'localhost';

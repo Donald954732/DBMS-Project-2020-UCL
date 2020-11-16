@@ -1,5 +1,3 @@
-//place bid function only works when connectionview user has ability to modify bids table
-
 <?php include_once("header.php")?>
 <?php include 'database.php'; ?>
 <?php require("utilities.php")?>
@@ -9,7 +7,7 @@
   $username = $_SESSION['username'];
   if(isset($_POST["bid"])){
     $bid = $_POST['bid'];
-    $item_id = $_POST["itemid"];
+    $item_id = $_POST["item_id"];
     }
 ?>
 <?php  
@@ -30,13 +28,14 @@
 
   //check auction exists and is running 
   $query = "SELECT AuctionID FROM auctions WHERE AuctionID = $item_id AND EndingTime > CURDATE()";
+  echo $query;
   $result = mysqli_query($connectionView,$query);
   if (mysqli_num_rows($result)<1)
     die("Auction finished");
   
   //Insert new bid
   $query = "INSERT INTO bids (UserName, AuctionID, BidPrice, Bidtime, Outcome) VALUES ('$username', $item_id, $bid, NOW(), 'Pending')"; 
-  if ($result = mysqli_query($connectionView,$query)){
+  if ($result = mysqli_query($connectionAddBids,$query)){
     echo 'Bid placed successfully';
   }
   else {
