@@ -58,7 +58,7 @@
               <option value="off">Office and Industrial Equipment</option> 
               <option value="spo">Sports</option>
               <option value="toy">Toys</option>
-              <option value="veh">Wehicles</option>
+              <option value="veh">vehicles</option>
             </select>
             <small id="categoryHelp" class="form-text text-muted"><span class="text-danger">* Required.</span> Select a category for this item.</small>
           </div>
