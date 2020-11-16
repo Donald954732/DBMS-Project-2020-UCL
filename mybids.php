@@ -4,14 +4,14 @@
 
 <div class="container">
 
-<h2 class="my-3">My listings</h2>
+<h2 class="my-3">My Bids</h2>
 
 <div id="searchSpecs">
 <!-- When this form is submitted, this PHP page is what processes it.
      Search/sort specs are passed to this page through parameters in the URL
      (GET method of passing data to a page). -->
 
-<form method="get" action="mylistings.php">
+<form method="get" action="mybids.php">
     <div class="col-md-3 pr-0">
       <div class="form-inline">
         <label class="mx-2" for="order_by">Sort by:</label>
@@ -56,9 +56,9 @@
   $UserType = $UserInfo['UserGroup'];
 
   if (mysqli_num_rows($resultusertype)<1)
-    die("Log in to view your listings");
+    die("Log in to view your bids");
   if ($UserType != 'Buyer')
-    die("log into buyer sccount to view your listings");
+    die("log into buyer sccount to view your bids");
 
   $results_per_page = 10;
   $querryItemList = "SELECT  a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
