@@ -16,10 +16,9 @@ else
 { 
     if ( $Password == $Passwordconfirm)
     {
-        $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['Email']."'";
+        $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['email']."'";
         $resultEmail = mysqli_query($connectionAddUser, $sqlQuerry);
-        $num = mysql_num_rows($resultEmail);
-        if($num)
+        if(mysql_num_rows($resultEmail)>0)
         {
             echo ('<div class="text-center">This email address has been registered.</div>');
         }
