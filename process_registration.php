@@ -11,7 +11,7 @@ if(isset($_POST["Submit"]) && $_POST["Submit"] == "Register")
     $Passwordconfirm = sha1($_POST["passwordConfirmation"]);
     if($Username==""||$Email == "" || $_Password == "" || $_Passwordconfirm == "")
     {
-        echo"<div class="text-center">Fields can not be left blank!</div>";
+        echo('<div class="text-center">Fields can not be left blank!</div>');
     }
     else
     { 
@@ -22,7 +22,7 @@ if(isset($_POST["Submit"]) && $_POST["Submit"] == "Register")
             $num = mysql_num_rows($resultEmail);
             if($num)
             {
-                echo "<div class="text-center">This email address has been registered</div>";
+                echo ('<div class="text-center">This email address has been registered.</div>');
             }
             else
             {
@@ -31,22 +31,25 @@ if(isset($_POST["Submit"]) && $_POST["Submit"] == "Register")
                 $result_insert = mysqli_query($sql_insert);
                 if($result_insert)
                 {
-                    echo "<div class="text-center">Registration complete!</div>";
+                    echo ('<div class="text-center">Registration complete!</div>');
                 }
                 else
                 {
-                    echo "<div class="text-center">The system is busy. Please try again later.</div>";
+                    echo ('<div class="text-center">The system is busy. Please try again later.</div>');
                 }
 
             }
         }
         else 
         { 
-            echo "<div class="text-center">Inconsistent passwords!</div>" ;
+            echo ('<div class="text-center">Inconsistent passwords!</div>') ;
         }
     }
 }
-
+else
+{
+    echo ('<div class="text-center">Unsuccessful attempt!</div>') ;
+}
 // TODO: Extract $_POST variables, check they're OK, and attempt to create
 // an account. Notify user of success/failure and redirect/give navigation
 // options.
