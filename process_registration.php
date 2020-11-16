@@ -4,19 +4,46 @@
 <?php
 if(isset($_POST["Submit"]) && $_POST["Submit"] == "Register") 
 {
+    $UserGroup = $_POST["accountType"];
     $Username = $_POST["username"];
     $Email = $_POST["email"];
-    $Password = $_POST["password"];
-    $Passwordconfirm = $_POST["passwordConfirmation"];
-    //username?
-    if($Email == "" || $_Password == "" || $_Passwordconfirm == "")//空的
+    $Password = sha1($_POST["password"]);
+    $Passwordconfirm = sha1($_POST["passwordConfirmation"]);
+    if($Username==""||$Email == "" || $_Password == "" || $_Passwordconfirm == "")
     {
         echo"<div class="text-center">Fields can not be left blank!</div>";
     }
-    else//不空
+    else
     { 
-        if //两次密码相同
+        if ( $Password == $Passwordconfirm)
+        {
+            $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '$Email'";
+            $resultEmail = mysqli_query($connectionAddUser, $sqlQuerry);
+            $num = mysql_num_rows($resultEmail);
+            if($num)
+            {
+                echo "<div class="text-center">This email address has been registered</div>";
+            }
+            else
+            {
+                $sql_insert = "INSERT INTO Auction.users  (Username, AuthPassWord, UserGroup, Email)
+                VALUES ('$Username', '$Password', '$UserGroup', '$Email')";
+                $result_insert = mysqli_query($sql_insert);
+                if($result_insert)
+                {
+                    echo "<div class="text-center">Registration complete!</div>";
+                }
+                else
+                {
+                    echo "<div class="text-center">The system is busy. Please try again later.</div>";
+                }
+
+            }
+        }
         else 
+        { 
+            echo "<div class="text-center">Inconsistent passwords!</div>" ;
+        }
     }
 }
 

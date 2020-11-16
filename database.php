@@ -48,6 +48,7 @@ if ($connectionAddUser->connect_error) {
 }
 //echo "Connected successfully userCreate";
 ?>
+
 <?php
 //$connectionAddWatchlist is for creating Auction
 $servername = "localhost";
