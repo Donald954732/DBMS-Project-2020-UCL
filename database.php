@@ -76,8 +76,8 @@ $table = "Auction";
 $connectionAddBids = new mysqli($servername, $username, $password, $table);
 
 // Check connection
-if ($connectionAddWatchlist->connect_error) {
-  die("Connection failed: " . $connectionAddWatchlist->connect_error);
+if ($connectionAddBids->connect_error) {
+  die("Connection failed: " . $connectionAddBids->connect_error);
 }
 //echo "Connected successfully WatchlistCreate";
 ?>

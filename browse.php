@@ -104,51 +104,40 @@
      decide on appropriate default value/default query to make. */
    
   $results_per_page = 10;
-  $querryItemList = "SELECT a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
-  "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'bidPrice', IF(MAX(bidPrice) IS NULL, a.StartingPrice, MAX(bidPrice))  AS 'CurrentPrice', a.StartingPrice ".
-  "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
-  "WHERE a.ItemName LIKE '%".$keyword."%' AND (a.EndingTime - CURRENT_TIMESTAMP) > 0 AND a.Category = ".$category." ".
-  "GROUP BY a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime ".$ordering;
+  $querryItemList = <<<QUERRYTEXT
+  SELECT
+    a.AuctionID,
+    a.ItemName,
+    a.ItemDescription,
+    a.StartingPrice,
+    a.EndingTime,
+    COUNT(b.BidID) AS 'CountBids',
+    MAX(b.BidPrice) AS 'bidPrice',
+    IF(
+      MAX(bidPrice) IS NULL,
+      a.StartingPrice,
+      MAX(bidPrice)
+    ) AS 'CurrentPrice',
+    a.StartingPrice
+  FROM
+    auctions a
+    LEFT JOIN bids b ON a.AuctionID = b.AuctionID
+  WHERE
+    a.ItemName LIKE '%{$keyword}%'
+    AND (a.EndingTime - CURRENT_TIMESTAMP) > 0
+    AND a.Category = {$category}
+  GROUP BY
+    a.AuctionID,
+    a.ItemName,
+    a.ItemDescription,
+    a.StartingPrice,
+    a.EndingTime {$ordering} 
+  QUERRYTEXT;
+  //echo $querryItemList;
 
   $limiter = " LIMIT ".strval(($curr_page-1)*$results_per_page).", ".strval($results_per_page);
   
   $querryWithLimitItemPerPage = $querryItemList.$limiter;
-  //echo $querryWithLimitItemPerPage;
-  //echo $querryItemList;
-  /*$querryTotalItem = "SELECT Count('RowNum') AS 'total' FROM (".$querryItemList.")";
-  $resultSearch = mysqli_query($connectionView, $querryItemList);
-  
-  $totalItem = mysqli_fetch_array($resultCatrgory);
-  */
-     /*//echo($keyword);
-     //echo($category);
-
-     if (empty($keyword) and $category != "all"){
-         // text field empty and category != all
-         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE Category = '$category' ORDER BY StartingPrice $ordering";
-     } elseif (!empty($keyword) and $category == "all"){
-         // text field not empty and category = all
-         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE INSTR(ItemDescription, '$keyword') > 0 ORDER BY StartingPrice $ordering";
-     } elseif (!empty($keyword) and $category != "all"){
-         // text field not empty and category != all
-         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions WHERE INSTR(ItemDescription, '$keyword') > 0 AND Category = '$category' ORDER BY StartingPrice $ordering";
-     }else{
-         //text field empty and category = all
-         $search_query = "SELECT AuctionID, ItemName, ItemDescription, StartingPrice, EndingTime FROM Auctions ORDER BY StartingPrice $ordering";
-     }
-
-     $search_query_result = mysqli_query($connectionView, $search_query) or die("Error with search query". mysql_error());
-
-     // Temporarily listing items here
-     while ($row = mysqli_fetch_array($search_query_result)){
-           // Need to show: $item_id, $title, $description, $current_price, $num_bids, $end_date
-           print_listing_li($row['AuctionID'], $row['ItemName'], $row['ItemDescription'], $row['StartingPrice'], 1, $row['EndingTime']);
-     }*/
-
-
-  /* For the purposes of pagination, it would also be helpful to know the
-     total number of results that satisfy the above query */
-  //$resultCatrgory = mysqli_query($connectionView, $querryCategoryList);
   
   $resultforCounting = mysqli_query($connectionView, $querryItemList);
   if ($resultforCounting) 
@@ -184,16 +173,22 @@
 <?php
   // Demonstration of what listings will look like using dummy data.
   $search_query_result = mysqli_query($connectionView, $querryWithLimitItemPerPage);
-  while ($row = mysqli_fetch_array($search_query_result)){
-  $item_id = $row['AuctionID'];
-  $title = $row['ItemName'];
-  $description = $row['ItemDescription'];
-  $current_price = $row['CurrentPrice'];
-  $num_bids = $row['CountBids'];
-  $end_date = new DateTime($row['EndingTime']);
-  // This uses a function defined in utilities.php
-  print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+  if (empty(mysqli_fetch_array($search_query_result)) != TRUE) {
+    while ($row = mysqli_fetch_array($search_query_result)){
+      $item_id = $row['AuctionID'];
+      $title = $row['ItemName'];
+      $description = $row['ItemDescription'];
+      $current_price = $row['CurrentPrice'];
+      $num_bids = $row['CountBids'];
+      $end_date = new DateTime($row['EndingTime']);
+      // This uses a function defined in utilities.php
+      print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+      }
   }
+  else{
+    echo 'No result matches the search criteria.';
+  }
+  
 ?>
 
 </ul>
