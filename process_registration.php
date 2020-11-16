@@ -10,7 +10,7 @@ $Password = sha1($_POST["password"]);
 $Passwordconfirm = sha1($_POST["passwordConfirmation"]);
 if($Username==""||$Email == "" || $Password == "" || $Passwordconfirm == "")
  {
-     echo('<div class="text-center">Fields can not be left blank!</div>');
+     echo "<script language= javascript>alert('Fields can not be left blank!');history.go(-1);</script>";
  }
 else
 { 
@@ -20,7 +20,7 @@ else
         $resultEmail = mysqli_query($connectionAddUser, $sqlQuerry);
         if(mysql_num_rows($resultEmail)>0)
         {
-            echo ('<div class="text-center">This email address has been registered.</div>');
+            echo "<script language= javascript>alert('This email address has been registered.');history.go(-1);</script>";
         }
         else
         {
@@ -29,17 +29,17 @@ else
             $result_insert = mysqli_query($sql_insert);
             if($result_insert)
             {
-                echo ('<div class="text-center">Registration complete!</div>');
+                echo "<script language= javascript>alert('Registration complete!');history.go(-1);</script>";
             }
             else
             {
-                echo ('<div class="text-center">The system is busy. Please try again later.</div>');
+                echo "<script language= javascript>alert('The system is busy. Please try again later.');history.go(-1);</script>";
             }
         }
     }
     else 
     { 
-        echo ('<div class="text-center">Inconsistent passwords! Try again.</div>') ;
+        echo "<script language= javascript>alert('Inconsistent passwords! Try again.');history.go(-1);</script>";
         echo ("<a href='register.php'>Back</a>");
     }
 }
