@@ -1,4 +1,5 @@
 <?php include_once("header.php")?>
+<?php include 'database.php'; ?>
 
 <div class="container my-5">
 
@@ -6,8 +7,6 @@
 
 // This function takes the form data and adds the new auction to the database.
 
-/* TODO #1: Connect to MySQL database (perhaps by requiring a file that
-            already does this). */
 
 
 /* TODO #2: Extract form data into variables. Because the form was a 'post'
