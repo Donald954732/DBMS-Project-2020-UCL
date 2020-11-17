@@ -140,6 +140,8 @@ FROM
   ) MaxPriceUser ON MaxPriceGlobal.AuctionID = MaxPriceUser.AuctionID
 WHERE
   MaxPriceGlobal.CurrentPrice != MaxPriceUser.UserMax 
+ORDER BY
+  MaxPriceGlobal.AuctionID
 QUERRYTEXT;
 //echo $querryOutbid;
 $resultOutbid = mysqli_query($connectionView, $querryOutbid);
@@ -212,6 +214,8 @@ GROUP BY
   a.ItemDescription,
   a.StartingPrice,
   a.EndingTime
+ORDER BY
+  a.AuctionID
 QUERRYTEXT;
 //echo $querryWatchList;
    //echo $querryWatchList;
