@@ -89,7 +89,9 @@
 <?php
 if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
   if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
-  $querryOutbid = <<<QUERRYTEXT
+
+/*Notification for outbid */
+$querryOutbid = <<<QUERRYTEXT
 SELECT *
 FROM
   (
@@ -142,10 +144,10 @@ QUERRYTEXT;
 //echo $querryOutbid;
 $resultOutbid = mysqli_query($connectionView, $querryOutbid);
 //echo $querryOutbid;
-if (empty(mysqli_fetch_array($resultOutbid)) != TRUE) {
+if ($resultOutbid->num_rows > 0) {
 
 echo <<<TABLEPARTS
-<div class="alert alert-warning alert-dismissible fade show" role="alert">
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
   <strong>Some of the items you bidded is being outbidded by other user!</strong>
   <table class="table">
   <thead>
@@ -158,13 +160,13 @@ echo <<<TABLEPARTS
   </thead>
   <tbody>
 TABLEPARTS;
-while ($row = mysqli_fetch_array($resultOutbid)){
+while ($rowOutbid = mysqli_fetch_array($resultOutbid)){
 echo <<<ROWPARTS
     <tr>
-      <th scope="row">{$row['AuctionID']}</th>
-      <td>{$row['ItemName']}</td>
-      <td>{$row['CurrentPrice']}</td>
-      <td>{$row['UserMax']}</td>
+      <th scope="row">{$rowOutbid['AuctionID']}</th>
+      <td>{$rowOutbid['ItemName']}</td>
+      <td>{$rowOutbid['CurrentPrice']}</td>
+      <td>{$rowOutbid['UserMax']}</td>
     </tr>
 ROWPARTS;
 }
@@ -176,7 +178,77 @@ echo <<<TABLEPARTS
   </button>
 </div>
 TABLEPARTS;
-   }
+}
+
+/*Extracting variable for the WatchList*/
+   $querryWatchList = <<<QUERRYTEXT
+SELECT
+  a.AuctionID,
+  a.ItemName,
+  a.StartingPrice,
+  MAX(b.BidPrice) AS 'bidPrice',
+  IF(
+    MAX(bidPrice) IS NULL,
+    a.StartingPrice,
+    MAX(bidPrice)
+  ) AS 'CurrentPrice'
+FROM
+  auctions a
+  LEFT JOIN bids b ON a.AuctionID = b.AuctionID
+WHERE
+  b.BidTime > CURDATE() - INTERVAL 1 DAY
+  AND b.Bidtime < CURDATE()
+  AND a.AuctionID IN (
+    SELECT
+      AuctionID
+    FROM
+      watchlist
+    WHERE
+      UserName = '{$_SESSION['username']}'
+  )
+GROUP BY
+  a.AuctionID,
+  a.ItemName,
+  a.ItemDescription,
+  a.StartingPrice,
+  a.EndingTime
+QUERRYTEXT;
+//echo $querryWatchList;
+   //echo $querryWatchList;
+   $resultWatchList = mysqli_query($connectionView, $querryWatchList);
+   //echo $querryOutbid;
+   if ($resultWatchList->num_rows > 0) {
+   echo <<<TABLEPARTS
+   <div class="alert alert-secondary alert-dismissible fade show" role="alert">
+     <strong>Update for your watchlist</strong>
+     <table class="table">
+     <thead>
+       <tr>
+         <th scope="col">Auction ID</th>
+         <th scope="col">Name Of Item</th>
+         <th scope="col">Current Bid Price (£)</th>
+       </tr>
+     </thead>
+     <tbody>
+   TABLEPARTS;
+   while ($rowWatchList = mysqli_fetch_array($resultWatchList)){
+    echo <<<ROWPARTS
+        <tr>
+          <th scope="row">{$rowWatchList['AuctionID']}</th>
+          <td>{$rowWatchList['ItemName']}</td>
+          <td>{$rowWatchList['CurrentPrice']}</td>
+        </tr>
+    ROWPARTS;
+    }
+   echo <<<TABLEPARTS
+     </tbody>
+   </table>
+     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+       <span aria-hidden="true">&times;</span>
+     </button>
+   </div>
+   TABLEPARTS;
+      }   
  }
 }
 

@@ -56,7 +56,15 @@
             WHERE
               UserName = '{$_SESSION['username']}'
           )
-          AND NOT UserName = '{$_SESSION['username']}}'
+          AND NOT UserName = '{$_SESSION['username']}'
+      )
+      AND a.AuctionID NOT In (
+        SELECT
+          AuctionID
+        FROM
+          Bids
+        WHERE
+          UserName = '{$_SESSION['username']}'
       )
       AND (a.EndingTime - CURRENT_TIMESTAMP) > 0
     GROUP BY
@@ -68,8 +76,7 @@
     ORDER BY
       COUNT(b.UserName) DESC  
 QUERRYTEXT;
-      //echo $recommendQuerry;
-      //echo $recommendQuerry;
+      echo $recommendQuerry;
       //echo $_SESSION['account_type'];
       $resultforRecommend = mysqli_query($connectionView, $recommendQuerry);
       // Demonstration of what listings will look like using dummy data.
