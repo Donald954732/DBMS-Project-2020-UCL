@@ -18,15 +18,14 @@ else
     {
         $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['email']."'";
         $resultEmail = mysqli_query($connectionAddUser, $sqlQuerry);
-        if(mysql_num_rows($resultEmail)>0)
+        if(empty(mysqli_fetch_array($resultOutbid)) != TRUE)
         {
             echo "<script language= javascript>alert('This email address has been registered.');history.go(-1);</script>";
         }
         else
         {
-            $sql_insert = "INSERT INTO Auction.users  (Username, AuthPassWord, UserGroup, Email)
-            VALUES ('$Username', '$Password', '$UserGroup', '$Email')";
-            $result_insert = mysqli_query($sql_insert);
+            $sql_insert = "INSERT INTO Auction.users  (Username, AuthPassWord, UserGroup, Email) VALUES ('$Username', '$Password', '$UserGroup', '$Email')";
+            $result_insert = mysqli_query($connectionAddUser, $sql_insert);
             if($result_insert)
             {
                 echo "<script language= javascript>alert('Registration complete!');history.go(-1);</script>";
@@ -40,7 +39,7 @@ else
     else 
     { 
         echo "<script language= javascript>alert('Inconsistent passwords! Try again.');history.go(-1);</script>";
-        echo ("<a href='register.php'>Back</a>");
+        echo ("<a href='browse.php'>Back</a>");
     }
 }
 
