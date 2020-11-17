@@ -250,6 +250,92 @@ QUERRYTEXT;
    TABLEPARTS;
       }   
  }
+ /* Finished Auction */
+  /* Fetching Auction ending today  */
+ $querryTodayAuctionFinish = <<<QUERRYTEXT
+ SELECT
+  a.AuctionID, 
+  a.UserName, 
+  u.Email,
+  a.ItemName, 
+  a.ReservePrice
+ FROM
+  auctions a
+  JOIN users u
+  ON u.UserName = a. UserName
+ WHERE
+  EndingTime > CURDATE() - INTERVAL 1 DAY
+  AND EndingTime < CURDATE()
+ QUERRYTEXT;
+ $resultTodayAuctionFinish = mysqli_query($connectionView, $querryTodayAuctionFinish);
+ if ($resultTodayAuctionFinish->num_rows > 0) {
+  echo <<<TABLEPARTS
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>Auction Just Ended</strong>
+    <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Auction ID</th>
+        <th scope="col">Name Of Item</th>
+        <th scope="col">Final Price (£)</th>
+        <th scope="col">Buyer</th>
+        <th scope="col">Buyer Email</th>
+        <th scope="col">Seller</th>
+        <th scope="col">Seller Email</th>
+      </tr>
+    </thead>
+    <tbody>
+  TABLEPARTS;
+  while ($rowFinAuction = mysqli_fetch_array($resultTodayAuctionFinish)){
+    $Auction_ID = $rowFinAuction['AuctionID'];
+    $Item_Name = $rowFinAuction['ItemName'];
+    $Seller = $rowFinAuction['UserName'];
+    $Seller_Email = $rowFinAuction['Email'];
+    $Reserve_Price = $rowFinAuction['ReservePrice'];
+    $querryWinner = <<<QUERRYTEXT
+    SELECT
+      b.UserName,
+      b.bidPrice,
+      u.Email 
+    FROM
+      bids b 
+      JOIN users u
+      ON b.UserName = u.Username
+    WHERE
+      b.AuctionID = {$Auction_ID}
+    ORDER BY
+      b.BidPrice DESC,
+      b.BidTime ASC;
+    QUERRYTEXT;
+    $resultWinner = mysqli_query($connectionView, $querryWinner);
+    $rowWinner = mysqli_fetch_array($resultWinner);
+    $Final_Price = $rowWinner['bidPrice'];
+    $Buyer = $rowWinner['UserName'];
+    $Buyer_Email = $rowWinner['Email'];
+    if ($Final_Price >= $Reserve_Price) {
+      echo <<<ROWPARTS
+      <tr>
+        <th scope="row">{$Auction_ID}</th>
+        <td>{$Item_Name}</td>
+        <td>{$Final_Price}</td>
+        <td>{$Buyer}</td>
+        <td>{$Buyer_Email}</td>
+        <td>{$Seller}</td>
+        <td>{$Seller_Email}</td>
+      </tr>
+  ROWPARTS;
+    }
+   }
+  echo <<<TABLEPARTS
+    </tbody>
+  </table>
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  TABLEPARTS;
+}
+
 }
 
 ?>
