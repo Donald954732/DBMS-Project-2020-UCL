@@ -76,7 +76,7 @@
     ORDER BY
       COUNT(b.UserName) DESC  
 QUERRYTEXT;
-      echo $recommendQuerry;
+      //echo $recommendQuerry;
       //echo $_SESSION['account_type'];
       $resultforRecommend = mysqli_query($connectionView, $recommendQuerry);
       // Demonstration of what listings will look like using dummy data.
