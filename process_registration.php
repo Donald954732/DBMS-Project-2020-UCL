@@ -9,9 +9,9 @@ $Email = $_POST["email"];
 $Password = sha1($_POST["password"]);
 $Passwordconfirm = sha1($_POST["passwordConfirmation"]);
 if($Username==""||$Email == "" || $Password == "" || $Passwordconfirm == "")
- {
-     echo "<script language= javascript>alert('Fields can not be left blank!');history.go(-1);</script>";
- }
+{
+    echo "<script language= javascript>alert('Fields can not be left blank!');history.go(-1);</script>";
+}
 else
 { 
     if ( $Password == $Passwordconfirm)

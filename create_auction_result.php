@@ -16,20 +16,17 @@ if($auctitle ==""||$aucStartprice == "" || $aucRsvprice == "" || $aucdate == "")
 {
     echo "<script language= javascript>alert('Fields can not be left blank!');history.go(-1);</script>";
 }
-
 else
 {
-    $sqlQuerry = "SELECT ItemName, ItemDescription, Category , StartingPrice, ReservePrice, EndingTime 
-    From Auction.auctions WHERE ItemName = '".$_POST['auctiontitle']."'";
+    $sqlQuerry = "SELECT UserName, ItemName, ItemDescription, Category, StartingPrice, ReservePrice, EndingTime From Auction.auctions WHERE ItemName = '".$_POST['auctiontitle']."'";
     $resultTitle = mysqli_query($connectionAddAuction, $sqlQuerry);
     if(empty(mysqli_fetch_array($resultTitle)) != TRUE)
-    
-        echo "<script language= javascript>alert('Username exists.');history.go(-1);</script>";
+    {
+        echo "<script language= javascript>alert('Depulicate auction title!');history.go(-1);</script>";
     }
     else
     {
-        $sql_insert = "INSERT INTO Auction.auctions  (UserName, ItemName, ItemDescription, Category , StartingPrice, ReservePrice, EndingTime) 
-        VALUES ('$username', '$auctitle', '$aucdetial', '$aucategory', '$aucStartprice', '$aucRsvprice', '$aucdate')";
+        $sql_insert = "INSERT INTO Auction.auctions (UserName, ItemName, ItemDescription, Category, StartingPrice, ReservePrice, EndingTime) VALUES ('$username', '$auctitle', '$aucdetial', '$aucategory', '$aucStartprice', '$aucRsvprice', '$aucdate')";
         $result_insert = mysqli_query($connectionAddAuction, $sql_insert);
         if($result_insert)
         {
@@ -37,10 +34,14 @@ else
         }
         else
         {
-            echo "<script language= javascript>alert('The system is busy. Please try again later.');history.go(-1);</script>";
+            echo "<script language= javascript>alert('Depulicate auction title!');history.go(-1);</script>";
         }
+
     }
+
 }
+
+
 // This function takes the form data and adds the new auction to the database.
 
 

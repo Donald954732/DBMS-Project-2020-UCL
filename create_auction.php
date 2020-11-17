@@ -50,7 +50,7 @@
               <option value="bok">Books</option>
               <option value="cam">Cameras and Photo</option>
               <option value="col">Collectables</option>
-              <option value="com">Computetr</option>
+              <option value="com">Computer</option>
               <option value="diy">DIY Tools</option>
               <option value="eve">Event Tickects</option>
               <option value="gar">Garden</option>
