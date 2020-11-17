@@ -32,7 +32,7 @@ else
             }
             else
             {
-                echo "<script language= javascript>alert('The system is busy. Please try again later.');history.go(-1);</script>";
+                echo "<script language= javascript>alert('Error: Duplicate User Name');history.go(-1);</script>";
             }
         }
     }

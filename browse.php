@@ -173,7 +173,7 @@
 <?php
   // Demonstration of what listings will look like using dummy data.
   $search_query_result = mysqli_query($connectionView, $querryWithLimitItemPerPage);
-  if (empty(mysqli_fetch_array($search_query_result)) != TRUE) {
+  if ($search_query_result->num_rows > 0) {
     while ($row = mysqli_fetch_array($search_query_result)){
       $item_id = $row['AuctionID'];
       $title = $row['ItemName'];
