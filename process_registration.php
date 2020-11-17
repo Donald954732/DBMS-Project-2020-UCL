@@ -16,11 +16,11 @@ else
 { 
     if ( $Password == $Passwordconfirm)
     {
-        $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['email']."'";
+        $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['username']."'";
         $resultEmail = mysqli_query($connectionAddUser, $sqlQuerry);
         if(empty(mysqli_fetch_array($resultOutbid)) != TRUE)
         {
-            echo "<script language= javascript>alert('This email address has been registered.');history.go(-1);</script>";
+            echo "<script language= javascript>alert('Username exists.');history.go(-1);</script>";
         }
         else
         {
@@ -28,7 +28,7 @@ else
             $result_insert = mysqli_query($connectionAddUser, $sql_insert);
             if($result_insert)
             {
-                echo "<script language= javascript>alert('Registration complete!');history.go(-1);</script>";
+                echo "<script language= javascript>alert('Registration Complete!');window.location.href='browse.php';</script>";
             }
             else
             {
@@ -39,9 +39,9 @@ else
     else 
     { 
         echo "<script language= javascript>alert('Inconsistent passwords! Try again.');history.go(-1);</script>";
-        echo ("<a href='browse.php'>Back</a>");
     }
 }
+
 
  // TODO: Extract $_POST variables, check they're OK, and attempt to create
  // an account. Notify user of success/failure and redirect/give navigation
