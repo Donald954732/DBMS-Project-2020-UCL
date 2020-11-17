@@ -18,7 +18,7 @@ else
     {
         $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['username']."'";
         $resultEmail = mysqli_query($connectionAddUser, $sqlQuerry);
-        if(empty(mysqli_fetch_array($resultEmail)) != TRUE)
+        if(empty(mysqli_fetch_array($resultEmail)) == FALSE)
         {
             echo "<script language= javascript>alert('Error: Duplicate User Name');history.go(-1);</script>";
         }
@@ -26,8 +26,14 @@ else
         {
             $sql_insert = "INSERT INTO Auction.users  (Username, AuthPassWord, UserGroup, Email) VALUES ('$Username', '$Password', '$UserGroup', '$Email')";
             $result_insert = mysqli_query($connectionAddUser, $sql_insert);
-            echo "<script language= javascript>alert('Registration Complete!');window.location.href='browse.php';</script>";
-            
+            if($result_insert)
+            {
+                echo "<script language= javascript>alert('Registration Complete!');window.location.href='browse.php';</script>";
+            }
+            else
+            {
+                echo "<script language= javascript>alert('Error: Duplicate User Name');history.go(-1);</script>";
+            }
         }
     }
     else 
