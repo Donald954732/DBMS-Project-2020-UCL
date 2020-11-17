@@ -18,7 +18,7 @@ else
     {
         $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['username']."'";
         $resultEmail = mysqli_query($connectionAddUser, $sqlQuerry);
-        if(empty(mysqli_fetch_array($resultOutbid)) != TRUE)
+        if(empty(mysqli_fetch_array($resultEmail)) != TRUE)
         {
             echo "<script language= javascript>alert('Username exists.');history.go(-1);</script>";
         }
