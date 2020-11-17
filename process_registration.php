@@ -18,9 +18,9 @@ else
     {
         $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['username']."'";
         $resultEmail = mysqli_query($connectionAddUser, $sqlQuerry);
-        if(empty(mysqli_fetch_array($resultOutbid)) != TRUE)
+        if(empty(mysqli_fetch_array($resultEmail)) == FALSE)
         {
-            echo "<script language= javascript>alert('Username exists.');history.go(-1);</script>";
+            echo "<script language= javascript>alert('Error: Duplicate User Name');history.go(-1);</script>";
         }
         else
         {
