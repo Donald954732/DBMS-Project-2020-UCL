@@ -45,27 +45,42 @@
     $curr_page = $_GET['page'];
   }
 
-  $username = $_SESSION['username'];
 
-
-  // check the user is loggen in and is a seller
-  $queryusertype = "SELECT UserGroup, username FROM Users where username = '$username'";
-  $resultusertype = mysqli_query($connectionView, $queryusertype);
-
-  $UserInfo = mysqli_fetch_array($resultusertype) ;
-  $UserType = $UserInfo['UserGroup'];
-
-  if (mysqli_num_rows($resultusertype)<1)
-    die("Log in to view your listings");
-  if ($UserType != 'Seller')
-    die("log into seller account to view your listings");
-
+  if (isset($_SESSION['username']) != true){
+    echo "Log in to view your bids";
+  }
+  else if ($_SESSION['account_type'] != 'seller'){
+    echo "log into seller sccount to view your listing";
+  }
   $results_per_page = 10;
-  $querryItemList = "SELECT a. username, a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
-  "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'bidPrice', IF(MAX(bidPrice) IS NULL, a.StartingPrice, MAX(bidPrice))  AS 'CurrentPrice', a.StartingPrice ".
-  "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
-  "WHERE a.username = '$username' ".
-  "GROUP BY a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime ".$ordering;
+  $querryItemList = <<<QUERRYTEXT
+  SELECT
+    a.AuctionID,
+    a.ItemName,
+    a.ItemDescription,
+    a.StartingPrice,
+    a.EndingTime,
+    COUNT(b.BidID) AS 'CountBids',
+    MAX(b.BidPrice) AS 'bidPrice',
+    IF(
+      MAX(bidPrice) IS NULL,
+      a.StartingPrice,
+      MAX(bidPrice)
+    ) AS 'CurrentPrice',
+    a.StartingPrice
+  FROM
+    auctions a
+    LEFT JOIN bids b ON a.AuctionID = b.AuctionID
+  WHERE
+    a.UserName = '{$_SESSION['username']}'
+  GROUP BY
+    a.AuctionID,
+    a.ItemName,
+    a.ItemDescription,
+    a.StartingPrice,
+    a.EndingTime {$ordering} 
+  QUERRYTEXT;
+  //echo $querryItemList;
 
   $limiter = " LIMIT ".strval(($curr_page-1)*$results_per_page).", ".strval($results_per_page);
   
@@ -78,13 +93,9 @@
     { 
         // it return number of rows in the table. 
         $num_results = mysqli_num_rows($resultforCounting); 
-          
-           if ($num_results) 
-              { 
-                 //printf("Number of row in the table : " . $num_results); 
-              }
     } 
   $max_page = ceil($num_results / $results_per_page);
+
 
 ?>
 

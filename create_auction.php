@@ -1,13 +1,11 @@
 <?php include_once("header.php")?>
 
 <?php
-/* (Uncomment this block to redirect people without selling privileges away from this page)
   // If user is not logged in or not a seller, they should not be able to
   // use this page.
   if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 'seller') {
     header('Location: browse.php');
   }
-*/
 ?>
 
 <div class="container">
@@ -45,21 +43,14 @@
           <div class="col-sm-10">
             <select class="form-control" name= "auctionCategory" id="auctionCategory">
               <option selected>Choose...</option>
-              <option value="ant">Antiques</option>
-              <option value="art">Art</option>
-              <option value="bok">Books</option>
-              <option value="cam">Cameras and Photo</option>
-              <option value="col">Collectables</option>
-              <option value="com">Computer</option>
-              <option value="diy">DIY Tools</option>
-              <option value="eve">Event Tickects</option>
-              <option value="gar">Garden</option>
-              <option value="hea">Health and Beauty</option>
-              <option value="mus">Musical Instruments</option>
-              <option value="off">Office and Industrial Equipment</option> 
-              <option value="spo">Sports</option>
-              <option value="toy">Toys</option>
-              <option value="veh">vehicles</option>
+              <?php 
+                  $querryCategoryList = "SELECT Category FROM auction.categorylist ORDER BY Category ASC";
+                  $resultCatrgory = mysqli_query($connectionView, $querryCategoryList);
+                  while ($rowCategory = mysqli_fetch_array($resultCatrgory))
+                  {
+                    echo "<option value='".$rowCategory['Category']."'>".$rowCategory['Category']."</option>";
+                  }
+              ?>
             </select>
             <small id="categoryHelp" class="form-text text-muted"><span class="text-danger">* Required.</span> Select a category for this item.</small>
           </div>

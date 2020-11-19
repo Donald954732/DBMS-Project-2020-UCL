@@ -60,8 +60,29 @@ QUERRYTEXT;
   // TODO: If the user has a session, use it to make a query to the database
   //       to determine if the user is already watching this item.
   //       For now, this is hardcoded.
-  $has_session = true;
-  $watching = false;
+  if (isset($_SESSION['username']) != true){
+    echo "Log in to add to wishlist";
+    $has_session = false;
+  }
+  else{
+    $has_session = true;
+    $querryInWatchlist = <<<QUERRYTEXT
+      SELECT
+        AuctionID
+      FROM
+        watchlist
+      WHERE
+        UserName = '{$_SESSION['username']}'
+        AND AuctionID = {$item_id}
+    QUERRYTEXT;
+    $resultInWatchList = mysqli_query($connectionView, $querryInWatchlist);
+    if ($resultInWatchList -> num_rows != 0){
+      $watching = true;
+    }
+    else {
+      $watching = false;
+    }
+  }
 ?>
 
 

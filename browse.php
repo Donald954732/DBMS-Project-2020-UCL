@@ -145,10 +145,6 @@
         // it return number of rows in the table. 
         $num_results = mysqli_num_rows($resultforCounting); 
           
-           if ($num_results) 
-              { 
-                 //printf("Number of row in the table : " . $num_results); 
-              }
     } 
   
   //$num_results = mysqli_num_rows($resultforCounting); // TODO: Calculate me for real

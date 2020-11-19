@@ -52,18 +52,18 @@ if ($connectionAddUser->connect_error) {
 <?php
 //$connectionAddWatchlist is for creating Auction
 $servername = "localhost";
-$username = "AuctionUserCreateWatchList";
-$password = "PasswordAuctionCreateWatchListDBMS2020";
+$username = "AuctionUserWatchList";
+$password = "PasswordAuctionWatchListDBMS2020";
 $table = "Auction";
 
 // Create connection
-$connectionAddWatchlist = new mysqli($servername, $username, $password, $table);
+$connectionWatchlist = new mysqli($servername, $username, $password, $table);
 
 // Check connection
-if ($connectionAddWatchlist->connect_error) {
-  die("Connection failed: " . $connectionAddWatchlist->connect_error);
+if ($connectionWatchlist->connect_error) {
+  die("Connection failed: " . $connectionWatchlist->connect_error);
 }
-//echo "Connected successfully WatchlistCreate";
+//echo "Connected successfully Watchlist";
 ?>
 
 <?php
@@ -81,4 +81,21 @@ if ($connectionAddBids->connect_error) {
   die("Connection failed: " . $connectionAddBids->connect_error);
 }
 //echo "Connected successfully WatchlistCreate";
+?>
+
+<?php
+//$connectionAddWatchlist is for creating Auction
+$servername = "localhost";
+$username = "AuctionUserUpdateOutcome";
+$password = "PasswordAuctionUpdateOutcomeDBMS2020";
+$table = "Auction";
+
+// Create connection
+$connectionUpdateOutcome = new mysqli($servername, $username, $password, $table);
+
+// Check connection
+if ($connectionUpdateOutcome->connect_error) {
+  die("Connection failed: " . $connectionUpdateOutcome->connect_error);
+}
+//echo "Connected successfully Outcome Update";
 ?>

@@ -44,28 +44,48 @@
   else {
     $curr_page = $_GET['page'];
   }
-
-  $username = $_SESSION['username'];
-
-
+  
   // check the user is loggen in and is a seller
-  $queryusertype = "SELECT UserGroup, username FROM Users where username = '$username'";
-  $resultusertype = mysqli_query($connectionView, $queryusertype);
 
-  $UserInfo = mysqli_fetch_array($resultusertype) ;
-  $UserType = $UserInfo['UserGroup'];
-
-  if (mysqli_num_rows($resultusertype)<1)
-    die("Log in to view your bids");
-  if ($UserType != 'Buyer')
-    die("log into buyer sccount to view your bids");
-
+  if (isset($_SESSION['username']) != true){
+    echo "Log in to view your bids";
+  }
+  else if ($_SESSION['account_type'] != 'buyer'){
+    echo "log into buyer sccount to view your bids";
+  }
   $results_per_page = 10;
-  $querryItemList = "SELECT  a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime, ".
-  "COUNT(b.BidID) AS 'CountBids', MAX(b.BidPrice) AS 'bidPrice', IF(MAX(bidPrice) IS NULL, a.StartingPrice, MAX(bidPrice))  AS 'CurrentPrice', a.StartingPrice ".
-  "FROM auctions a LEFT JOIN bids b ON a.AuctionID = b.AuctionID ".
-  "WHERE b.username = '$username' ".
-  "GROUP BY a.AuctionID, a.ItemName, a.ItemDescription, a.StartingPrice, a.EndingTime ".$ordering;
+  $querryItemList = <<<QUERRYTEXT
+  SELECT
+    a.AuctionID,
+    a.ItemName,
+    a.ItemDescription,
+    a.StartingPrice,
+    a.EndingTime,
+    COUNT(b.BidID) AS 'CountBids',
+    MAX(b.BidPrice) AS 'bidPrice',
+    IF(
+      MAX(bidPrice) IS NULL,
+      a.StartingPrice,
+      MAX(bidPrice)
+    ) AS 'CurrentPrice',
+    a.StartingPrice
+  FROM
+    auctions a
+    LEFT JOIN bids b ON a.AuctionID = b.AuctionID
+  WHERE
+    a.AuctionID IN (
+        SELECT AuctionID
+        FROM bids
+        WHERE UserName = '{$_SESSION['username']}'
+      ) 
+  GROUP BY
+    a.AuctionID,
+    a.ItemName,
+    a.ItemDescription,
+    a.StartingPrice,
+    a.EndingTime {$ordering} 
+  QUERRYTEXT;
+  //echo $querryItemList;
 
   $limiter = " LIMIT ".strval(($curr_page-1)*$results_per_page).", ".strval($results_per_page);
   
@@ -78,11 +98,6 @@
     { 
         // it return number of rows in the table. 
         $num_results = mysqli_num_rows($resultforCounting); 
-          
-           if ($num_results) 
-              { 
-                 //printf("Number of row in the table : " . $num_results); 
-              }
     } 
   $max_page = ceil($num_results / $results_per_page);
 
@@ -98,15 +113,15 @@
 <?php
   // Demonstration of what listings will look like using dummy data.
   $search_query_result = mysqli_query($connectionView, $querryWithLimitItemPerPage);
-  while ($row = mysqli_fetch_array($search_query_result)){
-  $item_id = $row['AuctionID'];
-  $title = $row['ItemName'];
-  $description = $row['ItemDescription'];
-  $current_price = $row['CurrentPrice'];
-  $num_bids = $row['CountBids'];
-  $end_date = new DateTime($row['EndingTime']);
-  // This uses a function defined in utilities.php
-  print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+    while ($row = mysqli_fetch_array($search_query_result)){
+    $item_id = $row['AuctionID'];
+    $title = $row['ItemName'];
+    $description = $row['ItemDescription'];
+    $current_price = $row['CurrentPrice'];
+    $num_bids = $row['CountBids'];
+    $end_date = new DateTime($row['EndingTime']);
+    // This uses a function defined in utilities.php
+    print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
   }
 ?>
 

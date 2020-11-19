@@ -22,7 +22,7 @@ if (mysqli_num_rows($resultLogin) == 1){
         echo('<div class="text-center">Password Correct.</div>');
         session_start();
         $_SESSION['logged_in'] = true;
-        echo $_SESSION['logged_in'];
+        //echo $_SESSION['logged_in'];
         $_SESSION['username'] = $UserInfo['UserName'];
         $_SESSION['account_type'] = strtolower($UserInfo['UserGroup']);
         $_SESSION['email'] = strtolower($UserInfo['Email']);
