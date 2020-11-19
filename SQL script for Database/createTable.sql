@@ -144,7 +144,7 @@ CREATE TABLE Auctions (
     StartingPrice FLOAT(10, 2) NOT NULL,
     ReservePrice FLOAT(10, 2),
     EndingTime DATETIME NOT NULL,
-    Outcome VARCHAR(10),
+    Outcome VARCHAR(12),
     PRIMARY KEY (AuctionID),
     CONSTRAINT FK_UserName_Bid FOREIGN KEY (Username) REFERENCES auction.Users(Username),
     CONSTRAINT FK_Category_Bid FOREIGN KEY (Category) REFERENCES auction.CategoryList(Category)

@@ -292,7 +292,7 @@ echo "<br>";
         $body .= "Auction Team \n";
         $body .= "<br>";
         echo $body;
-        $Outcome = "BLWReser";
+        $Outcome = "BelowReserve";
     }
     $updateOucomeQuerry = <<<QUERRYTEXT
     UPDATE auctions

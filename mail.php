@@ -206,7 +206,7 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
         mail($user_Email, $subject, $body);
-        $Outcome = "BLWReser";
+        $Outcome = "BelowReserve";
         /*email to highest bidder beow reserve price*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
         $user_email = $Buyer_Email;
