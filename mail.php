@@ -178,17 +178,7 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
         mail($user_Email, $subject, $body);
-        $updateOucomeQuerry = <<<QUERRYTEXT
-        UPDATE auctions
-        SET 
-          Outcome = "Nobids"
-        WHERE AuctionID = {$Auction_ID};
-        QUERRYTEXT;
-        $resultUpdateOutcome = mysqli_query($connectionUpdateOutcome, $updateOucomeQuerry);
-        //echo $updateOucomeQuerry;
-        if ($resultUpdateOutcome){
-          //echo "Updated to Nobids";
-        }
+        $Outcome = "NoBid";
     }
     /*if buying price is more than the reserve price*/
     else if ($Final_Price >= $Reserve_Price) {
@@ -206,17 +196,7 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
         mail($user_Email, $subject, $body);
-        $updateOucomeQuerry = <<<QUERRYTEXT
-        UPDATE auctions
-        SET 
-          Outcome = "Success"
-        WHERE AuctionID = {$Auction_ID};
-        QUERRYTEXT;
-        $resultUpdateOutcome = mysqli_query($connectionUpdateOutcome, $updateOucomeQuerry);
-        //echo $updateOucomeQuerry;
-        if ($resultUpdateOutcome){
-          //echo "Updated to Success";
-        }
+        $Outcome = "Success";
     }
     else {
         /*email to seller if it don't meet the reserve price*/
@@ -226,17 +206,7 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
         mail($user_Email, $subject, $body);
-        $updateOucomeQuerry = <<<QUERRYTEXT
-        UPDATE auctions
-        SET 
-          Outcome = "BLWReser"
-        WHERE AuctionID = {$Auction_ID};
-        QUERRYTEXT;
-        $resultUpdateOutcome = mysqli_query($connectionUpdateOutcome, $updateOucomeQuerry);
-        echo $updateOucomeQuerry;
-        if ($resultUpdateOutcome){
-          //echo "Updated to BlwReser";
-        }
+        $Outcome = "BLWReser";
         /*email to highest bidder beow reserve price*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
         $user_email = $Buyer_Email;
@@ -244,6 +214,18 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
         mail($user_Email, $subject, $body);
+    }
+    /* Updating Outcome*/
+    $updateOucomeQuerry = <<<QUERRYTEXT
+    UPDATE auctions
+    SET 
+      Outcome = "{$Outcome}"
+    WHERE AuctionID = {$Auction_ID};
+    QUERRYTEXT;
+    $resultUpdateOutcome = mysqli_query($connectionUpdateOutcome, $updateOucomeQuerry);
+    //echo $updateOucomeQuerry;
+    if ($resultUpdateOutcome){
+      //echo "Updated to Nobids";
     }
         /* Email To Loser*/
         $querryloser = <<<QUERRYTEXT

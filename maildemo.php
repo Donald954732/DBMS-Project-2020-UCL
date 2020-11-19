@@ -208,17 +208,8 @@ echo "<br>";
         $body .= "Auction Team \n";
         $body .= "<br>";
         echo $body;
-        $updateOucomeQuerry = <<<QUERRYTEXT
-        UPDATE auctions
-        SET 
-          Outcome = "Nobids"
-        WHERE AuctionID = {$Auction_ID};
-        QUERRYTEXT;
-        $resultUpdateOutcome = mysqli_query($connectionUpdateOutcome, $updateOucomeQuerry);
-        echo $updateOucomeQuerry;
-        if ($resultUpdateOutcome){
-          echo "Updated to Nobids";
-        }
+        $Outcome = "NoBids";
+        
     }
     /*if buying price is more than the reserve price*/
     else if ($Final_Price >= $Reserve_Price) {
@@ -260,17 +251,7 @@ echo "<br>";
         $body .= "Auction Team \n";
         $body .= "<br>";
         echo $body;
-        $updateOucomeQuerry = <<<QUERRYTEXT
-        UPDATE auctions
-        SET 
-          Outcome = "Success"
-        WHERE AuctionID = {$Auction_ID};
-        QUERRYTEXT;
-        $resultUpdateOutcome = mysqli_query($connectionUpdateOutcome, $updateOucomeQuerry);
-        echo $updateOucomeQuerry;
-        if ($resultUpdateOutcome){
-          echo "Updated to Success";
-        }
+        $Outcome = "Success";
     }
     else {
         /*email to seller if it don't meet the reserve price*/
@@ -292,17 +273,6 @@ echo "<br>";
         $body .= "Auction Team \n";
         $body .= "<br>";
         echo $body;
-        $updateOucomeQuerry = <<<QUERRYTEXT
-        UPDATE auctions
-        SET 
-          Outcome = "BLWReser"
-        WHERE AuctionID = {$Auction_ID};
-        QUERRYTEXT;
-        $resultUpdateOutcome = mysqli_query($connectionUpdateOutcome, $updateOucomeQuerry);
-        echo $updateOucomeQuerry;
-        if ($resultUpdateOutcome){
-          echo "Updated to BlwReser";
-        }
         /*email to highest bidder beow reserve price*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
         $user_email = $Buyer_Email;
@@ -322,6 +292,18 @@ echo "<br>";
         $body .= "Auction Team \n";
         $body .= "<br>";
         echo $body;
+        $Outcome = "BLWReser";
+    }
+    $updateOucomeQuerry = <<<QUERRYTEXT
+    UPDATE auctions
+    SET 
+      Outcome = "{$Outcome}"
+    WHERE AuctionID = {$Auction_ID};
+    QUERRYTEXT;
+    $resultUpdateOutcome = mysqli_query($connectionUpdateOutcome, $updateOucomeQuerry);
+    //echo $updateOucomeQuerry;
+    if ($resultUpdateOutcome){
+      //echo "Updated to Nobids";
     }
     /* Email To Loser*/
     $querryloser = <<<QUERRYTEXT
