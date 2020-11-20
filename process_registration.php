@@ -16,7 +16,7 @@ else
 { 
     if ( $Password == $Passwordconfirm)
     {
-        $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['username']."'";
+        $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['email']."'";
         $resultEmail = mysqli_query($connectionView, $sqlQuerry);
         if($resultEmail -> num_rows > 0 || !filter_var($email, FILTER_VALIDATE_EMAIL))
         {
