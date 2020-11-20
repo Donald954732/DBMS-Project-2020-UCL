@@ -13,12 +13,12 @@ if($Username==""||$Email == "" || $Password == "" || $Passwordconfirm == "")
     echo "<script language= javascript>alert('Fields can not be left blank!');history.go(-1);</script>";
 }
 else
-{ 
+{
     if ( $Password == $Passwordconfirm)
     {
-        $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['username']."'";
+        $sqlQuerry = "SELECT Username, AuthPassWord, UserGroup , Email From Auction.users WHERE Email = '".$_POST['email']."'";
         $resultEmail = mysqli_query($connectionView, $sqlQuerry);
-        if($resultEmail -> num_rows > 0 || !filter_var($email, FILTER_VALIDATE_EMAIL))
+        if($resultEmail -> num_rows > 0 || !filter_var($Email, FILTER_VALIDATE_EMAIL))
         {
             echo "<script language= javascript>alert('Error: Invalid Email or duplicate');history.go(-1);</script>";
         }
@@ -36,8 +36,8 @@ else
             }
         }
     }
-    else 
-    { 
+    else
+    {
         echo "<script language= javascript>alert('Inconsistent passwords! Try again.');history.go(-1);</script>";
     }
 }
