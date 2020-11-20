@@ -1,6 +1,8 @@
 <?php require("database.php")?>
 
 <?php
+$name = "Group 11 Auction Site Admin"; //sender’s name
+$email = "Admin@Auction.com"; //sender’s e-mail address
 /*email for Watchlist and Outbid daily update*/
 /*retrieving a list of all user*/
 $querryAllUser = <<<QUERRYTEXT

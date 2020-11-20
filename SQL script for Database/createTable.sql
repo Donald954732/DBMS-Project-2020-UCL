@@ -937,11 +937,7 @@ INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('humorousHawk1
 INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('mildDingo3', 66, 7522.83, '2020-11-17 09:59:20');
 INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('soreCheetah1', 42, 4429.59, '2020-10-24 11:00:02');
 INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('madThrush1', 32, 998.48, '2020-10-29 05:24:09');
-INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('affectedCardinal5', 77, 2447.65, '2020-11-15 12:45:57');
-INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('madThrush1', 77, 2000.65, '2020-11-14 12:45:57');
-INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('madThrush1', 77, 400.65, '2020-11-14 12:45:57');
-INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('shyOryx1', 77, 1400.65, '2020-11-12 12:45:57');
-INSERT INTO Bids (UserName, AuctionID, BidPrice, BidTime) VALUES ('shyOryx1', 77, 300.65, '2020-11-11 12:45:57');
+
 DROP TABLE IF EXISTS WatchList;
 CREATE TABLE WatchList (
     UserName VARCHAR(50),
