@@ -1,6 +1,12 @@
 <?php require("database.php")?>
 
 <?php
+ini_set("sendmail_path", "C:\wamp64\sendmail\sendmail.exe");
+ini_set("smtp_port","2525");
+$headers = 'From: webmaster@G11Auction.com' . "\r\n" .
+    'Reply-To: webmaster@G11Auction.com' . "\r\n" .
+    'X-Mailer: PHP/' . phpversion();
+
 $name = "Group 11 Auction Site Admin"; //sender’s name
 $email = "Admin@Auction.com"; //sender’s e-mail address
 /*email for Watchlist and Outbid daily update*/
@@ -124,7 +130,12 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
         /*sending mail*/
-        mail($user_Email, $subject, $body);
+        $result = mail($user_Email, $subject, $body, $headers);
+        if( $result ) {
+          echo 'Success';
+       }else{
+          echo 'Fail';
+       }
     }
 }
 /*email for auction finish daily update*/
@@ -190,14 +201,24 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body = "The Item: {$Item_Name} ID: {$Auction_ID} is bidded by {$Buyer} at £{$Final_Price}. Please arrange payment and shipping as soon as possible with buyer's email: {$Buyer_Email}\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        mail($user_Email, $subject, $body);
+        $result = mail($user_Email, $subject, $body, $headers);
+        if( $result ) {
+          echo 'Success';
+        }else{
+          echo 'Fail';
+        }
         /*email to buyer*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
         $user_email = $Buyer_Email;
         $body = "You win the Bid of The Item: {$Item_Name} ID: {$Auction_ID} from {$Seller} at £{$Final_Price}. Please arrange payment and shipping as soon as possible with seller's email: {$Seller_Email}\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        mail($user_Email, $subject, $body);
+        $result = mail($user_Email, $subject, $body, $headers);
+        if( $result ) {
+          echo 'Success';
+        }else{
+          echo 'Fail';
+        }
         $Outcome = "Success";
     }
     else {
@@ -207,7 +228,12 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body = "The Item: {$Item_Name} ID: {$Auction_ID} ended the auction at £{$Final_Price}. The bidders failed to meet the reserve price.\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        mail($user_Email, $subject, $body);
+        $result = mail($user_Email, $subject, $body, $headers);
+        if( $result ) {
+          echo 'Success';
+        }else{
+          echo 'Fail';
+        }
         $Outcome = "BelowReserve";
         /*email to highest bidder beow reserve price*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
@@ -215,7 +241,12 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $body = "You Failed to bid The Item: {$Item_Name} ID: {$Auction_ID}.\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        mail($user_Email, $subject, $body);
+        $result = mail($user_Email, $subject, $body, $headers);
+        if( $result ) {
+          echo 'Success';
+        }else{
+          echo 'Fail';
+        }
     }
     /* Updating Outcome*/
     $updateOucomeQuerry = <<<QUERRYTEXT
@@ -252,7 +283,12 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
           $body = "You Failed to bid The Item: {$Item_Name} ID: {$Auction_ID}.\n";
           $body .= "Regards, \n";
           $body .= "Auction Team \n";
-          mail($user_Email, $subject, $body);
+          $result = mail($user_Email, $subject, $body, $headers);
+          if( $result ) {
+            echo 'Success';
+          }else{
+            echo 'Fail';
+          }
         }
    }
 }
