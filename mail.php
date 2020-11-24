@@ -184,24 +184,24 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
     $Buyer = $rowWinner['UserName'];
     $Buyer_Email = $rowWinner['Email'];
     if ($Final_Price == "") {
-        /*email to seller if it don't meet the reserve price*/
+        /*email to seller if it has no bid*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
-        $user_email = $Seller_Email;
-        $body = "The Item: {$Item_Name} ID: {$Auction_ID} ended the auction with no Bids.\n";
+        $body = "Hello $Seller, \n";
+        $body .= "The Item: {$Item_Name} ID: {$Auction_ID} ended the auction with no Bids.\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        mail($user_Email, $subject, $body);
+        mail($Seller_Email, $subject, $body, $headers);
         $Outcome = "NoBid";
     }
     /*if buying price is more than the reserve price*/
     else if ($Final_Price >= $Reserve_Price) {
         /*email to seller*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
-        $user_email = $Seller_Email;
-        $body = "The Item: {$Item_Name} ID: {$Auction_ID} is bidded by {$Buyer} at £{$Final_Price}. Please arrange payment and shipping as soon as possible with buyer's email: {$Buyer_Email}\n";
+        $body = "Hello $Seller, \n";
+        $body .= "The Item: {$Item_Name} ID: {$Auction_ID} is bidded by {$Buyer} at £{$Final_Price}. Please arrange payment and shipping as soon as possible with buyer's email: {$Buyer_Email}\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        $result = mail($user_Email, $subject, $body, $headers);
+        $result = mail($Seller_Email, $subject, $body, $headers);
         if( $result ) {
           echo 'Success';
         }else{
@@ -209,26 +209,60 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         }
         /*email to buyer*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
-        $user_email = $Buyer_Email;
-        $body = "You win the Bid of The Item: {$Item_Name} ID: {$Auction_ID} from {$Seller} at £{$Final_Price}. Please arrange payment and shipping as soon as possible with seller's email: {$Seller_Email}\n";
+        $body = "Hello $Buyer, \n";
+        $body .= "You win the Bid of The Item: {$Item_Name} ID: {$Auction_ID} from {$Seller} at £{$Final_Price}. Please arrange payment and shipping as soon as possible with seller's email: {$Seller_Email}\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        $result = mail($user_Email, $subject, $body, $headers);
+        $result = mail($Buyer_Email, $subject, $body, $headers);
         if( $result ) {
           echo 'Success';
         }else{
           echo 'Fail';
         }
         $Outcome = "Success";
+        /* Email To Loser See SQL manual for Offset!*/
+        $querryloser = <<<QUERRYTEXT
+        SELECT
+          DISTINCT u.Email,
+          u.UserName 
+        FROM
+          bids b 
+          JOIN users u
+          ON b.UserName = u.Username
+        WHERE
+          b.AuctionID = {$Auction_ID}
+        ORDER BY
+          b.BidPrice DESC,
+          b.BidTime ASC
+        LIMIT
+          1, 18446744073709551615
+        QUERRYTEXT;
+        $resultloser = mysqli_query($connectionView, $querryloser);
+        while ($rowloser = mysqli_fetch_array($resultloser)){
+          /*email to loser*/
+          $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
+          $loser_email = $rowloser['Email'];
+          $username = $rowloser['UserName'];
+          $body = "Hello $username, \n";
+          $body .= "You Failed to bid The Item: {$Item_Name} ID: {$Auction_ID}.\n";
+          $body .= "Regards, \n";
+          $body .= "Auction Team \n";
+          $result = mail($loser_email, $subject, $body, $headers);
+          if( $result ) {
+            echo 'Success';
+          }else{
+            echo 'Fail';
+          }
+        }
     }
     else {
         /*email to seller if it don't meet the reserve price*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
-        $user_email = $Seller_Email;
-        $body = "The Item: {$Item_Name} ID: {$Auction_ID} ended the auction at £{$Final_Price}. The bidders failed to meet the reserve price.\n";
+        $body = "Hello $Seller, \n";
+        $body .= "The Item: {$Item_Name} ID: {$Auction_ID} ended the auction at £{$Final_Price}. The bidders failed to meet the reserve price.\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        $result = mail($user_Email, $subject, $body, $headers);
+        $result = mail($Seller_Email, $subject, $body, $headers);
         if( $result ) {
           echo 'Success';
         }else{
@@ -237,15 +271,49 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
         $Outcome = "BelowReserve";
         /*email to highest bidder beow reserve price*/
         $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
-        $user_email = $Buyer_Email;
-        $body = "You Failed to bid The Item: {$Item_Name} ID: {$Auction_ID}.\n";
+        $body = "Hello $Buyer, \n";
+        $body .= "You Failed to bid The Item: {$Item_Name} ID: {$Auction_ID}.\n";
         $body .= "Regards, \n";
         $body .= "Auction Team \n";
-        $result = mail($user_Email, $subject, $body, $headers);
+        $result = mail($Buyer_Email, $subject, $body, $headers);
         if( $result ) {
           echo 'Success';
         }else{
           echo 'Fail';
+        }
+        /* Email To Loser*/
+        $querryloser = <<<QUERRYTEXT
+        SELECT
+          DISTINCT u.Email,
+          u.UserName 
+        FROM
+          bids b 
+          JOIN users u
+          ON b.UserName = u.Username
+        WHERE
+          b.AuctionID = {$Auction_ID}
+        ORDER BY
+          b.BidPrice DESC,
+          b.BidTime ASC
+        LIMIT
+          1, 18446744073709551615
+        QUERRYTEXT;
+        $resultloser = mysqli_query($connectionView, $querryloser);
+        while ($rowloser = mysqli_fetch_array($resultloser)){
+          /*email to loser*/
+          $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
+          $loser_email = $rowloser['Email'];
+          $username = $rowloser['UserName'];
+          $body = "Hello {$username}, \n";
+          $body .= "You Failed to bid The Item: {$Item_Name} ID: {$Auction_ID}.\n";
+          $body .= "Regards, \n";
+          $body .= "Auction Team \n";
+          $result = mail($loser_email, $subject, $body, $headers);
+          if( $result ) {
+            echo 'Success';
+          }else{
+            echo 'Fail';
+          }
         }
     }
     /* Updating Outcome*/
@@ -260,36 +328,7 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
     if ($resultUpdateOutcome){
       //echo "Updated to Nobids";
     }
-        /* Email To Loser*/
-        $querryloser = <<<QUERRYTEXT
-        SELECT
-          DISTINCT u.Email 
-        FROM
-          bids b 
-          JOIN users u
-          ON b.UserName = u.Username
-        WHERE
-          b.AuctionID = {$Auction_ID}
-          AND b.UserName != '{$Buyer}'
-        ORDER BY
-          b.BidPrice DESC,
-          b.BidTime ASC;
-        QUERRYTEXT;
-        $resultloser = mysqli_query($connectionView, $querryloser);
-        while ($rowloser = mysqli_fetch_array($resultloser)){
-          /*email to loser*/
-          $subject = "The outcome of Item: {$Item_Name} ID: {$Auction_ID}";
-          $user_email = $rowloser['Email'];
-          $body = "You Failed to bid The Item: {$Item_Name} ID: {$Auction_ID}.\n";
-          $body .= "Regards, \n";
-          $body .= "Auction Team \n";
-          $result = mail($user_Email, $subject, $body, $headers);
-          if( $result ) {
-            echo 'Success';
-          }else{
-            echo 'Fail';
-          }
-        }
+
    }
 }
 
