@@ -92,7 +92,7 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
     auctions a
     LEFT JOIN bids b ON a.AuctionID = b.AuctionID
     WHERE
-    b.BidTime > CURDATE() - INTERVAL 1 DAY
+    b.BidTime >= CURDATE() - INTERVAL 1 DAY
     AND b.Bidtime < CURDATE()
     AND a.AuctionID IN (
         SELECT
@@ -152,7 +152,7 @@ while ($rowAllUser = mysqli_fetch_array($resultAllUser)){
   JOIN users u
   ON u.UserName = a. UserName
  WHERE
-  EndingTime > CURDATE() - INTERVAL 1 DAY
+  EndingTime >= CURDATE() - INTERVAL 1 DAY
   AND EndingTime < CURDATE()
  QUERRYTEXT;
  $resultTodayAuctionFinish = mysqli_query($connectionView, $querryTodayAuctionFinish);
